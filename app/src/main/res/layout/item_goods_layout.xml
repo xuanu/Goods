@@ -14,7 +14,7 @@
         android:gravity="center_vertical"
         android:padding="8dp">
 
-        <ImageView
+        <views.zeffect.cn.darklib.DarkImage
             android:id="@+id/item_goods_img"
             android:layout_width="120dp"
             android:layout_height="120dp"
@@ -27,7 +27,7 @@
             android:layout_marginLeft="8dp"
             android:orientation="vertical">
 
-            <TextView
+            <views.zeffect.cn.darklib.DarkText
                 android:id="@+id/item_title_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
                 android:textSize="16sp"
                 android:transitionName="@string/tran_title" />
 
-            <TextView
+            <views.zeffect.cn.darklib.DarkText
                 android:id="@+id/item_des_tv"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -49,7 +49,7 @@
                 android:textSize="14sp"
                 android:transitionName="@string/tran_des" />
 
-            <TextView
+            <views.zeffect.cn.darklib.DarkText
                 android:id="@+id/item_price_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
