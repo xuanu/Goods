@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Goods</string>
+    <string name="tran_img">tran_img</string>
+    <string name="tran_title">tran_title</string>
+    <string name="tran_des">tran_des</string>
+    <string name="tran_price">tran_price</string>
 </resources>

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import app.zeffect.cn.goods.main.MainActivity;
+import app.zeffect.cn.goods.ui.main.MainActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
 

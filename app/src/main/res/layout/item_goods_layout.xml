@@ -15,8 +15,11 @@
         android:padding="8dp">
 
         <ImageView
+            android:id="@+id/item_goods_img"
             android:layout_width="120dp"
-            android:layout_height="120dp" />
+            android:layout_height="120dp"
+            android:src="@drawable/goods_ex"
+            android:transitionName="@string/tran_img" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,31 +28,37 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/item_title_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="1"
-                android:text="草莓"
+                android:text="青柠"
                 android:textColor="#000"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:transitionName="@string/tran_title" />
 
             <TextView
+                android:id="@+id/item_des_tv"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:maxLines="2"
-                android:text=""
+                android:text="新鲜水果北京红颜青柠净重1.5kg礼盒装"
                 android:textColor="#666"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:transitionName="@string/tran_des" />
 
             <TextView
+                android:id="@+id/item_price_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:maxLines="2"
                 android:text="￥18.8"
-                android:textColor="#ff3e2f"
-                android:textSize="18sp" />
+                android:textColor="@color/color_price"
+                android:textSize="18sp"
+                android:transitionName="@string/tran_price" />
         </LinearLayout>
     </LinearLayout>
 

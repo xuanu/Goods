@@ -1,4 +1,4 @@
-package app.zeffect.cn.goods.main;
+package app.zeffect.cn.goods.ui.main;
 
 import android.support.annotation.Nullable;
 
@@ -17,6 +17,8 @@ public class GoodsAdapter extends BaseQuickAdapter<Goods, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, Goods item) {
-
+        helper.setText(R.id.item_title_tv, item.getGoodsName())
+                .setText(R.id.item_des_tv, item.getGoodsDescribe())
+                .setText(R.id.item_price_tv, "￥" + item.getGoodsPrice());
     }
 }
