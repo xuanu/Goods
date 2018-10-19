@@ -28,4 +28,28 @@ public class GoodRepertory {
     private int repertoryCount;//库存数量
     @Column(COL_GOODS_REPERTORY_TOTAL)
     private int repertoryTotal;
+
+    public long getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(long goodsId) {
+        this.goodsId = goodsId;
+    }
+
+    public int getRepertoryCount() {
+        return repertoryCount;
+    }
+
+    public void setRepertoryCount(int repertoryCount) {
+        this.repertoryCount = repertoryCount;
+    }
+
+    public int getRepertoryTotal() {
+        return repertoryTotal;
+    }
+
+    public void setRepertoryTotal(int repertoryTotal) {
+        this.repertoryTotal = repertoryTotal;
+    }
 }

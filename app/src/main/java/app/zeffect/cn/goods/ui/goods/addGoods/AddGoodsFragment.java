@@ -1,5 +1,7 @@
 package app.zeffect.cn.goods.ui.goods.addGoods;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,13 +16,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import app.zeffect.cn.goods.R;
+import app.zeffect.cn.goods.bean.GoodRepertory;
+import app.zeffect.cn.goods.bean.Goods;
 import app.zeffect.cn.goods.utils.Constant;
 
 public class AddGoodsFragment extends Fragment implements View.OnClickListener {
     private View rootView;
     private String barCode = "";
 
-
+    private AddViewModel addViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +36,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
             // TODO: 2018/10/19 SnackBar参数错数
             getActivity().finish();
         }
-
+        addViewModel = ViewModelProviders.of(this).get(AddViewModel.class);
     }
 
     @Nullable
@@ -63,11 +67,41 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initData() {
-
+        addViewModel.addGoodsInfo.observe(this, new Observer<Goods>() {
+            @Override
+            public void onChanged(@Nullable Goods goods) {
+                if (goods != null) {
+                    titleEt.setText(goods.getGoodsName());
+                    desEt.setText(goods.getGoodsDescribe());
+                    addViewModel.findRepertory(goods);
+                }
+            }
+        });
+        addViewModel.mGoodRepertory.observe(this, new Observer<GoodRepertory>() {
+            @Override
+            public void onChanged(@Nullable GoodRepertory goodRepertory) {
+                if (goodRepertory != null) {
+                    goodsCountTv.setText(goodRepertory.getRepertoryCount());
+                }
+            }
+        });
+        addViewModel.mAddRepertoryCount.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer integer) {
+                if (integer != null) {
+                    costLayout.setVisibility(integer > 0 ? View.VISIBLE : View.GONE);
+                    addGoodsCountTv.setText("" + integer);
+                }
+            }
+        });
+        addViewModel.mAddRepertoryCount.postValue(0);
     }
 
     @Override
     public void onClick(View view) {
-
+        if (view.getId() == R.id.add_count_btn) {
+            int count = addViewModel.mAddRepertoryCount.getValue();
+            addViewModel.mAddRepertoryCount.postValue(count + 1);
+        }
     }
 }
