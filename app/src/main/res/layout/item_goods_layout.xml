@@ -49,6 +49,16 @@
                 android:textSize="14sp"
                 android:transitionName="@string/tran_des" />
 
+            <TextView
+                android:id="@+id/item_bar_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:maxLines="2"
+                android:text="条形码："
+                android:textColor="@color/color_des"
+                android:textSize="12sp" />
+
             <views.zeffect.cn.darklib.DarkText
                 android:id="@+id/item_price_tv"
                 android:layout_width="match_parent"

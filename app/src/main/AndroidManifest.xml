@@ -29,6 +29,10 @@
             android:name=".ui.goods.GoodsInfo.GoodsInfoActivity"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/NoActionBarAppTheme"></activity>
+        <activity
+            android:name=".ui.goods.addGoods.AddGoodsActivity"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/NoActionBarAppTheme"></activity>
     </application>
 
 </manifest>

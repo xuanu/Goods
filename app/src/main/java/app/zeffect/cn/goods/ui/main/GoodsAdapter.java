@@ -28,5 +28,6 @@ public class GoodsAdapter extends BaseQuickAdapter<Goods, BaseViewHolder> {
             helper.setText(R.id.item_des_tv, item.getGoodsDescribe());
         }
         helper.setText(R.id.item_price_tv, "￥" + item.getGoodsPrice());
+        helper.setText(R.id.item_bar_tv,"条形码："+item.getBarCode());
     }
 }

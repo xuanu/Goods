@@ -31,6 +31,7 @@ import java.util.List;
 import app.zeffect.cn.goods.R;
 import app.zeffect.cn.goods.bean.Goods;
 import app.zeffect.cn.goods.ui.goods.GoodsInfo.GoodsInfoActivity;
+import app.zeffect.cn.goods.ui.goods.addGoods.AddGoodsActivity;
 import app.zeffect.cn.goods.ui.match.MatchBarActivity;
 import app.zeffect.cn.goods.utils.Constant;
 import app.zeffect.cn.goods.utils.DoAsync;
@@ -105,9 +106,10 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
         } else if (v.getId() == R.id.scan_btn) {
             scan();
         } else if (v.getId() == R.id.fab_scan) {
-            scan();
+//            scan();
+            startActivity(new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.DATA, "6957735788861"));
         } else if (v.getId() == R.id.add_goods_btn) {
-            gotoMachActivity("");
+
         }
     }
 
@@ -172,7 +174,6 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
                                         @Override
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                                             sweetAlertDialog.dismissWithAnimation();
-                                            gotoMachActivity(barCode);
                                         }
                                     })
                                     .show();
@@ -181,11 +182,6 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
                 }.execute(result);
             }
         });
-    }
-
-
-    private void gotoMachActivity(String barCode) {
-        startActivity(new Intent(getContext(), MatchBarActivity.class).putExtra(Constant.DATA, barCode));
     }
 
 

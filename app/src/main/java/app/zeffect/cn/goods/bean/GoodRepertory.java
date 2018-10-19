@@ -11,7 +11,7 @@ import app.zeffect.cn.goods.ui.main.GoodsRepository;
  * 库存表
  */
 @Table(GoodRepertory.TABLE_GOOD_REPERTORY)
-public class GoodRepertory extends BaseGoods {
+public class GoodRepertory {
     public static final String TABLE_GOOD_REPERTORY = "goods_repertory";
 
     public static final String COL_ID = "id";
