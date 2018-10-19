@@ -65,7 +65,7 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener 
                 if (goods != null) {
                     mTitleTv.setText(goods.getGoodsName());
                     mDesTv.setText(goods.getGoodsDescribe());
-                    mCountTv.setText(goods.getGoodsCount() + "");
+//                    mCountTv.setText(goods.getGoodsCount() + "");todo
                     mPriceTv.setText("￥" + goods.getGoodsPrice() + "");
                 }
             }
@@ -92,13 +92,14 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener 
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                int count = goodsInfos.getGoodsCount();
-                                int hasCount = count - 1;
-                                if (hasCount < 0) hasCount = 0;
-                                goodsInfos.setGoodsCount(hasCount);
-                                if (GoodsRepository.saveGoods(goodsInfos)) {
-                                    goodsInfoViewModel.goodsMutableLiveData.postValue(goodsInfos);
-                                }
+                                // TODO: 2018/10/19  需要修改
+//                                int count = goodsInfos.getGoodsCount();
+//                                int hasCount = count - 1;
+//                                if (hasCount < 0) hasCount = 0;
+//                                goodsInfos.setGoodsCount(hasCount);
+//                                if (GoodsRepository.saveGoods(goodsInfos)) {
+//                                    goodsInfoViewModel.goodsMutableLiveData.postValue(goodsInfos);
+//                                }
                                 sweetAlertDialog.dismissWithAnimation();
                             }
                         })
