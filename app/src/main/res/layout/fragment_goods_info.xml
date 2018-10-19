@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fdfdfd"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="40dp">
+
+        <views.zeffect.cn.darklib.DarkImage
+            android:id="@+id/left_back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_white_chevron_left_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:lines="1"
+            android:maxEms="10"
+            android:text="产品"
+            android:textColor="@color/colorPrimary2"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="24dp"
+        app:cardBackgroundColor="@color/colorPrimary2"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="8dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <ImageView
+                android:id="@+id/goods_img"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/goods_ex"
+                android:transitionName="@string/tran_img"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.332"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/goods_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="青柠"
+                android:textColor="@color/color_title"
+                android:textSize="20sp"
+                android:textStyle="normal"
+                android:transitionName="@string/tran_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/goods_img" />
+
+
+            <TextView
+                android:id="@+id/goods_des_tv"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:maxLines="4"
+                android:text="新鲜水果北京红颜青柠净重1.5kg礼盒装"
+                android:textColor="@color/color_des"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:transitionName="@string/tran_des"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.12"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/goods_title_tv"
+                app:layout_constraintWidth_percent="0.7" />
+
+            <LinearLayout
+                android:id="@+id/good_count_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/goods_des_tv">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="库存:"
+                    android:textColor="@color/color_des"
+                    android:textSize="14sp" />
+
+
+                <TextView
+                    android:id="@+id/goods_count_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="1"
+                    android:textColor="@color/color_price"
+                    android:textSize="20sp" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/price_lable_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="单价"
+                android:textColor="@color/color_des"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/good_count_layout" />
+
+            <TextView
+                android:id="@+id/goods_price_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="￥10.8"
+                android:textColor="@color/color_price"
+                android:textSize="20sp"
+                android:transitionName="@string/tran_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/price_lable_tv" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="8dp"
+                android:gravity="right"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/info_shape_bg"
+                    android:lines="1"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp"
+                    android:text="编辑商品"
+                    android:textColor="#fff"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/goods_sale_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/info_shape_bg"
+                    android:lines="1"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp"
+                    android:text="售出商品"
+                    android:textColor="#fff"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+
+        </android.support.constraint.ConstraintLayout>
+
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

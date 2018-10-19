@@ -62,14 +62,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:src="@drawable/ic_mic_black_24dp" />
+                    android:src="@drawable/ic_mic_black_24dp"
+                    android:visibility="gone" />
 
                 <views.zeffect.cn.darklib.DarkImage
                     android:id="@+id/add_goods_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:src="@drawable/ic_add_black_24dp" />
+                    android:src="@drawable/ic_add_black_24dp"
+                    android:visibility="gone" />
             </LinearLayout>
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>

@@ -30,8 +30,8 @@ import java.util.List;
 
 import app.zeffect.cn.goods.R;
 import app.zeffect.cn.goods.bean.Goods;
-import app.zeffect.cn.goods.orm.GoodsOrm;
 import app.zeffect.cn.goods.ui.goods.GoodsInfo.GoodsInfoActivity;
+import app.zeffect.cn.goods.ui.match.MatchBarActivity;
 import app.zeffect.cn.goods.utils.Constant;
 import app.zeffect.cn.goods.utils.DoAsync;
 import cn.bertsir.zbar.QrConfig;
@@ -81,6 +81,7 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
         rootView.findViewById(R.id.add_goods_btn).setOnClickListener(this);
         rootView.findViewById(R.id.scan_btn).setOnClickListener(this);
         rootView.findViewById(R.id.fab_scan).setOnClickListener(this);
+        rootView.findViewById(R.id.add_goods_btn).setOnClickListener(this);
         goodsAdapter.setOnItemClickListener(this);
         goodsAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_RIGHT);
         searchEdit.addTextChangedListener(textWatcher);
@@ -105,6 +106,8 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
             scan();
         } else if (v.getId() == R.id.fab_scan) {
             scan();
+        } else if (v.getId() == R.id.add_goods_btn) {
+            gotoMachActivity("");
         }
     }
 
@@ -155,7 +158,7 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
                     }
 
                     @Override
-                    protected void onPostExecute(Context pTarget, List<Goods> pResult) throws Exception {
+                    protected void onPostExecute(final Context pTarget, List<Goods> pResult) throws Exception {
                         super.onPostExecute(pTarget, pResult);
                         if (pResult != null && !pResult.isEmpty()) {
                             goodsViewModel.getGoodsLiveData().postValue(pResult);
@@ -168,11 +171,8 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
                                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                         @Override
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.changeAlertType(SweetAlertDialog.PROGRESS_TYPE);
-                                            GoodsOrm.getInstance().save(new Goods().setBarCode(barCode).setGoodsName("随机商品" + System.currentTimeMillis()));
-                                            goodsViewModel.getGoods("");
                                             sweetAlertDialog.dismissWithAnimation();
-
+                                            gotoMachActivity(barCode);
                                         }
                                     })
                                     .show();
@@ -181,6 +181,11 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
                 }.execute(result);
             }
         });
+    }
+
+
+    private void gotoMachActivity(String barCode) {
+        startActivity(new Intent(getContext(), MatchBarActivity.class).putExtra(Constant.DATA, barCode));
     }
 
 
