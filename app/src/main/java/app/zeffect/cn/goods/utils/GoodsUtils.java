@@ -3,6 +3,7 @@ package app.zeffect.cn.goods.utils;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 
 import java.util.regex.Matcher;
@@ -16,7 +17,7 @@ public class GoodsUtils {
         Pattern pattern = Pattern.compile(findTxt);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
-            builder.setSpan(colorSpan, matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setSpan(CharacterStyle.wrap(colorSpan), matcher.start(), matcher.end(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
         return builder;
     }
