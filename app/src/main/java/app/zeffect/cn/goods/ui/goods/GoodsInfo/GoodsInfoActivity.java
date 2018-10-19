@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import app.zeffect.cn.goods.R;
 import app.zeffect.cn.goods.bean.Goods;
+import app.zeffect.cn.goods.orm.GoodsOrm;
 import app.zeffect.cn.goods.ui.BaseActivity;
 import app.zeffect.cn.goods.ui.main.GoodsRepository;
 import app.zeffect.cn.goods.utils.Constant;
@@ -56,7 +57,8 @@ public class GoodsInfoActivity extends BaseActivity implements View.OnClickListe
             }
         });
         if (getIntent().hasExtra(Constant.DATA)) {
-            goodsInfos = (Goods) getIntent().getSerializableExtra(Constant.DATA);
+            long id = getIntent().getLongExtra(Constant.DATA, 0);
+            goodsInfos = GoodsOrm.getInstance().queryById(id, Goods.class);
         }
         if (goodsInfos != null) goodsInfoViewModel.goodsMutableLiveData.postValue(goodsInfos);
     }

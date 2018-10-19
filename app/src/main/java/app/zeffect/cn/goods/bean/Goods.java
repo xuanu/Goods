@@ -1,6 +1,12 @@
 package app.zeffect.cn.goods.bean;
 
+import android.text.SpannableStringBuilder;
+
+import com.litesuits.orm.db.annotation.Column;
+import com.litesuits.orm.db.annotation.Ignore;
+import com.litesuits.orm.db.annotation.PrimaryKey;
 import com.litesuits.orm.db.annotation.Table;
+import com.litesuits.orm.db.enums.AssignType;
 
 import java.io.Serializable;
 
@@ -9,15 +15,85 @@ import java.io.Serializable;
  */
 @Table("goods_infos")
 public class Goods implements Serializable {
-    private int id;
-    private String goodsName;
-    private double goodsPrice;
-    private String goodsDescribe;//商品描述
-    private int goodsTotal;//商品总数，进货多少商品
-    private int goodsCount;//库存
-    private double goodsPrimeCost;//进货价格，成本
-    private String goodsImg;
-    private long creatTime;
+
+    public static final String COL_NAME = "name";
+    public static final String COL_DESCRIBE = "describe";
+    public static final String COL_PRICE = "price";
+    public static final String COL_GOODS_TOTAL = "total";
+    public static final String COL_GOODS_COUNT = "count";
+    public static final String COL_GOODS_PRIME_COSE = "primecost";
+    public static final String COL_GOODS_IMG = "goodsimg";
+    public static final String COL_GOODS_CREAT_TIME = "creattime";
+    public static final String COL_BAR_CODE = "barcode";
+
+
+    @PrimaryKey(AssignType.AUTO_INCREMENT)
+    private long id;
+    @Column(COL_NAME)
+    private String goodsName = "";
+    @Column(COL_PRICE)
+    private double goodsPrice = 0;
+    @Column(COL_DESCRIBE)
+    private String goodsDescribe = "";//商品描述
+    @Column(COL_GOODS_TOTAL)
+    private int goodsTotal = 0;//商品总数，进货多少商品
+    @Column(COL_GOODS_COUNT)
+    private int goodsCount = 0;//库存
+    @Column(COL_GOODS_PRIME_COSE)
+    private double goodsPrimeCost = 0;//进货价格，成本
+    @Column(COL_GOODS_IMG)
+    private String goodsImg = "";
+    @Column(COL_GOODS_CREAT_TIME)
+    private long creatTime = 0;
+    @Column(COL_BAR_CODE)
+    private String barCode = "";
+
+    @Ignore
+    private SpannableStringBuilder nameBuilder;
+    @Ignore
+    private SpannableStringBuilder desBuilder;
+    @Ignore
+    private SpannableStringBuilder barBuilder;
+
+    public SpannableStringBuilder getNameBuilder() {
+        return nameBuilder;
+    }
+
+    public Goods setNameBuilder(SpannableStringBuilder nameBuilder) {
+        this.nameBuilder = nameBuilder;
+        return this;
+    }
+
+    public SpannableStringBuilder getDesBuilder() {
+        return desBuilder;
+    }
+
+    public Goods setDesBuilder(SpannableStringBuilder desBuilder) {
+        this.desBuilder = desBuilder;
+        return this;
+    }
+
+    public SpannableStringBuilder getBarBuilder() {
+        return barBuilder;
+    }
+
+    public Goods setBarBuilder(SpannableStringBuilder barBuilder) {
+        this.barBuilder = barBuilder;
+        return this;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public Goods setBarCode(String barCode) {
+        this.barCode = barCode;
+        return this;
+    }
+
+    public long getId() {
+        return id;
+    }
 
     public String getGoodsImg() {
         return goodsImg;
