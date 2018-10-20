@@ -33,23 +33,26 @@ public class GoodRepertory {
         return goodsId;
     }
 
-    public void setGoodsId(long goodsId) {
+    public GoodRepertory setGoodsId(long goodsId) {
         this.goodsId = goodsId;
+        return this;
     }
 
     public int getRepertoryCount() {
         return repertoryCount;
     }
 
-    public void setRepertoryCount(int repertoryCount) {
+    public GoodRepertory setRepertoryCount(int repertoryCount) {
         this.repertoryCount = repertoryCount;
+        return this;
     }
 
     public int getRepertoryTotal() {
         return repertoryTotal;
     }
 
-    public void setRepertoryTotal(int repertoryTotal) {
+    public GoodRepertory setRepertoryTotal(int repertoryTotal) {
         this.repertoryTotal = repertoryTotal;
+        return this;
     }
 }

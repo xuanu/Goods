@@ -3,6 +3,7 @@ package app.zeffect.cn.goods.ui.goods.addGoods;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import com.litesuits.orm.db.assit.QueryBuilder;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import app.zeffect.cn.goods.bean.GoodRepertory;
 import app.zeffect.cn.goods.bean.Goods;
 import app.zeffect.cn.goods.orm.GoodsOrm;
+import app.zeffect.cn.goods.ui.main.GoodsRepository;
 import app.zeffect.cn.goods.utils.DoAsync;
 
 public class AddViewModel extends ViewModel {
@@ -19,8 +21,39 @@ public class AddViewModel extends ViewModel {
     public MutableLiveData<Integer> mAddRepertoryCount = new MutableLiveData<>();
 
 
-    public void findRepertory(Goods goods) {
-        if (goods == null) return;
+    public void findGoods(String barCode) {
+        if (TextUtils.isEmpty(barCode)) return;
+        new AsyncTask<String, Void, Goods>() {
+
+            private String mBarCode = "";
+
+            @Override
+            protected Goods doInBackground(String... strings) {
+                mBarCode = strings[0];
+                List<Goods> goods = GoodsRepository.likeGoodsBar(strings[0]);
+                if (goods != null && !goods.isEmpty()) {
+                    return goods.get(0);
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Goods goods) {
+                super.onPostExecute(goods);
+                if (goods == null) {
+                    goods = new Goods();
+                    goods.setBarCode(mBarCode);
+                }
+                addGoodsInfo.postValue(goods);
+            }
+        }.execute(barCode);
+    }
+
+    public void findRepertory(long goodsId) {
+        if (goodsId < 0) {
+            mGoodRepertory.postValue(new GoodRepertory().setGoodsId(goodsId));
+            return;
+        }
         new AsyncTask<Long, Void, GoodRepertory>() {
             @Override
             protected GoodRepertory doInBackground(Long... longs) {
@@ -36,7 +69,7 @@ public class AddViewModel extends ViewModel {
                 super.onPostExecute(goodRepertory);
                 mGoodRepertory.postValue(goodRepertory);
             }
-        }.execute(goods.getId());
+        }.execute(goodsId);
     }
 
 }

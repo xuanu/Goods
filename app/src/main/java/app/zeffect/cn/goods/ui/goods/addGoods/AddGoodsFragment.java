@@ -1,14 +1,20 @@
 package app.zeffect.cn.goods.ui.goods.addGoods;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +24,7 @@ import android.widget.TextView;
 import app.zeffect.cn.goods.R;
 import app.zeffect.cn.goods.bean.GoodRepertory;
 import app.zeffect.cn.goods.bean.Goods;
+import app.zeffect.cn.goods.utils.ChoseImage;
 import app.zeffect.cn.goods.utils.Constant;
 import app.zeffect.cn.goods.utils.SnackbarUtil;
 
@@ -52,20 +59,64 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
         return rootView;
     }
 
+    private TextInputLayout titleLayout, desLayout;
     private TextInputEditText titleEt, desEt, costPriceEt, priceEt;
     private TextView goodsCountTv, addGoodsCountTv, goodsBarTv;
     private View costLayout;
 
     private void initView() {
+        titleLayout = rootView.findViewById(R.id.good_title_layout);
+        desLayout = rootView.findViewById(R.id.goods_des_layout);
         titleEt = rootView.findViewById(R.id.goods_title_tv);
         desEt = rootView.findViewById(R.id.goods_des_tv);
         goodsCountTv = rootView.findViewById(R.id.goods_count_tv);
         addGoodsCountTv = rootView.findViewById(R.id.add_goods_count_tv);
+        costPriceEt = rootView.findViewById(R.id.goods_cost_price_tv);
+        priceEt = rootView.findViewById(R.id.goods_price_tv);
         costLayout = rootView.findViewById(R.id.cost_layout);
+        goodsBarTv = rootView.findViewById(R.id.goods_bar_tv);
         //
         rootView.findViewById(R.id.remove_count_btn).setOnClickListener(this);
         rootView.findViewById(R.id.add_count_btn).setOnClickListener(this);
         rootView.findViewById(R.id.add_bar_btn).setOnClickListener(this);
+        rootView.findViewById(R.id.left_back_btn).setOnClickListener(this);
+        rootView.findViewById(R.id.sure_add_goods_btn).setOnClickListener(this);
+        rootView.findViewById(R.id.goods_img).setOnClickListener(this);
+        //
+        titleEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String data = editable.toString().trim();
+                titleLayout.setErrorEnabled(TextUtils.isEmpty(data) ? true : false);
+            }
+        });
+        desEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String data = editable.toString().trim();
+                desLayout.setErrorEnabled(TextUtils.isEmpty(data) ? true : false);
+            }
+        });
     }
 
     private void initData() {
@@ -75,7 +126,10 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
                 if (goods != null) {
                     titleEt.setText(goods.getGoodsName());
                     desEt.setText(goods.getGoodsDescribe());
-                    addViewModel.findRepertory(goods);
+                    goodsBarTv.setText(goods.getBarCode());
+                    costPriceEt.setText(goods.getGoodsCostPrice() + "");
+                    priceEt.setText(goods.getGoodsPrice() + "");
+                    addViewModel.findRepertory(goods.getId());
                 }
             }
         });
@@ -97,6 +151,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
             }
         });
         addViewModel.mAddRepertoryCount.postValue(0);
+        addViewModel.findGoods(barCode);
     }
 
     @Override
@@ -104,6 +159,51 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
         if (view.getId() == R.id.add_count_btn) {
             int count = addViewModel.mAddRepertoryCount.getValue();
             addViewModel.mAddRepertoryCount.postValue(count + 1);
+        } else if (view.getId() == R.id.remove_count_btn) {
+            int count = addViewModel.mAddRepertoryCount.getValue();
+            if (count >= 1) {
+                addViewModel.mAddRepertoryCount.postValue(count - 1);
+            }
+        } else if (view.getId() == R.id.left_back_btn) {
+            getActivity().finish();
+        } else if (view.getId() == R.id.sure_add_goods_btn) {
+            checkAdd();
+        } else if (view.getId() == R.id.goods_img) {
+            ChoseImage.choseImageFromGallery(getContext(), 0x10);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0x10) {
+            if (resultCode == Activity.RESULT_OK) {
+                String imgPath = ChoseImage.getGalleryPath(getContext(), data);
+                Log.e("zeffect", "img path:" + imgPath);
+            }
+        }
+    }
+
+    /**
+     * 检查添加
+     */
+    public void checkAdd() {
+        boolean checkSuccess = true;
+        //
+        String goodsTitleStr = titleEt.getText().toString().trim();
+        if (TextUtils.isEmpty(goodsTitleStr)) {
+            checkSuccess = false;
+        }
+        titleLayout.setError("输入商品名");
+        titleLayout.setErrorEnabled(TextUtils.isEmpty(goodsTitleStr) ? true : false);
+        //
+        String goodsDesStr = desEt.getText().toString().trim();
+        if (TextUtils.isEmpty(goodsDesStr)) {
+            checkSuccess = false;
+        }
+        desLayout.setError("输入商品描述");
+        desLayout.setErrorEnabled(TextUtils.isEmpty(goodsDesStr) ? true : false);
+        //
+
     }
 }

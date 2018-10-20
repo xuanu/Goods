@@ -54,7 +54,7 @@
                 android:orientation="vertical"
                 android:padding="4dp">
 
-                <ImageView
+                <views.zeffect.cn.darklib.DarkImage
                     android:id="@+id/goods_img"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
@@ -62,15 +62,17 @@
                     android:src="@drawable/goods_ex" />
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/good_title_layout"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/goods_title_tv"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@null"
+                        android:ems="8"
                         android:gravity="center"
                         android:hint="商品名"
                         android:lines="1"
@@ -81,20 +83,21 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/goods_des_layout"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/goods_des_tv"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="32dp"
-                        android:layout_marginRight="32dp"
-                        android:background="@null"
+                        android:ems="15"
                         android:gravity="center"
                         android:hint="简要描述商品"
                         android:maxLines="4"
+                        android:minLines="2"
                         android:textColor="@color/color_des"
                         android:textSize="16sp"
                         android:textStyle="normal" />
@@ -112,7 +115,7 @@
                         android:textColor="@color/color_des"
                         android:textSize="14sp" />
 
-                    <android.support.design.widget.TextInputEditText
+                    <TextView
                         android:id="@+id/goods_count_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -156,12 +159,15 @@
                         android:padding="8dp"
                         android:src="@drawable/ic_remove_black_24dp" />
 
-                    <TextView
+                    <android.support.design.widget.TextInputEditText
                         android:id="@+id/add_goods_count_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:background="@null"
+                        android:ems="3"
+                        android:gravity="center"
+                        android:lines="1"
                         android:text="0"
                         android:textColor="@color/color_price"
                         android:textSize="20sp" />
@@ -283,7 +289,7 @@
                         android:layout_marginLeft="8dp"
                         android:ems="7"
                         android:gravity="center"
-                        android:text="6957735788861" />
+                        android:text="" />
 
 
                     <views.zeffect.cn.darklib.DarkImage
@@ -297,11 +303,11 @@
                 </LinearLayout>
 
 
-                <Button
+                <views.zeffect.cn.darklib.DarkButton
                     android:id="@+id/sure_add_goods_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="16dp"
                     android:background="@drawable/info_shape_bg"
                     android:paddingLeft="80dp"
                     android:paddingRight="80dp"

@@ -1,10 +1,12 @@
 package app.zeffect.cn.goods.bean;
 
+import android.text.TextUtils;
+
 import com.litesuits.orm.db.annotation.Column;
 
 public class BaseGoods {
 
-    public static final String COL_GOODS_COST_PRICE="costprice";
+    public static final String COL_GOODS_COST_PRICE = "costprice";
 
     @Column(Goods.COL_NAME)
     private String goodsName = "";
@@ -41,6 +43,7 @@ public class BaseGoods {
     }
 
     public String getBarCode() {
+        if (TextUtils.isEmpty(barCode)) barCode = "";
         return barCode;
     }
 
@@ -51,6 +54,7 @@ public class BaseGoods {
 
 
     public String getGoodsImg() {
+        if (TextUtils.isEmpty(goodsImg)) goodsImg = "";
         return goodsImg;
     }
 
@@ -60,6 +64,7 @@ public class BaseGoods {
     }
 
     public String getGoodsName() {
+        if (TextUtils.isEmpty(goodsName)) goodsName = "";
         return goodsName;
     }
 
@@ -78,6 +83,7 @@ public class BaseGoods {
     }
 
     public String getGoodsDescribe() {
+        if (TextUtils.isEmpty(goodsDescribe)) goodsDescribe = "";
         return goodsDescribe;
     }
 
