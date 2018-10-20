@@ -19,6 +19,7 @@ import app.zeffect.cn.goods.R;
 import app.zeffect.cn.goods.bean.GoodRepertory;
 import app.zeffect.cn.goods.bean.Goods;
 import app.zeffect.cn.goods.utils.Constant;
+import app.zeffect.cn.goods.utils.SnackbarUtil;
 
 public class AddGoodsFragment extends Fragment implements View.OnClickListener {
     private View rootView;
@@ -32,10 +33,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
         if (getActivity().getIntent().hasExtra(Constant.DATA)) {
             barCode = getActivity().getIntent().getStringExtra(Constant.DATA);
         }
-        if (TextUtils.isEmpty(barCode)) {
-            // TODO: 2018/10/19 SnackBar参数错数
-            getActivity().finish();
-        }
+
         addViewModel = ViewModelProviders.of(this).get(AddViewModel.class);
     }
 
@@ -44,6 +42,10 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_add_goods, container, false);
+            if (TextUtils.isEmpty(barCode)) {
+                SnackbarUtil.ShortSnackbar(rootView, "参数错误", SnackbarUtil.Warning);
+                getActivity().finish();
+            }
             initView();
             initData();
         }
