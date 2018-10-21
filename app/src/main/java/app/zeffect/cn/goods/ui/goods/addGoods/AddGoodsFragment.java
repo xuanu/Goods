@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import app.zeffect.cn.goods.R;
@@ -42,6 +43,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
         }
 
         addViewModel = ViewModelProviders.of(this).get(AddViewModel.class);
+        addViewModel.mSureAdd.postValue(false);
     }
 
     @Nullable
@@ -62,9 +64,15 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
     private TextInputLayout titleLayout, desLayout;
     private TextInputEditText titleEt, desEt, costPriceEt, priceEt;
     private TextView goodsCountTv, addGoodsCountTv, goodsBarTv;
-    private View costLayout;
+    private ImageView goodsImg;
+    private View costLayout, lastCountLayout, addCountLayout, saleLayout, barLayout;
 
     private void initView() {
+        saleLayout = rootView.findViewById(R.id.sale_layout);
+        barLayout = rootView.findViewById(R.id.bar_layout);
+        addCountLayout = rootView.findViewById(R.id.add_count_layout);
+        lastCountLayout = rootView.findViewById(R.id.last_count_layout);
+        goodsImg = rootView.findViewById(R.id.goods_img);
         titleLayout = rootView.findViewById(R.id.good_title_layout);
         desLayout = rootView.findViewById(R.id.goods_des_layout);
         titleEt = rootView.findViewById(R.id.goods_title_tv);
@@ -98,6 +106,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
             public void afterTextChanged(Editable editable) {
                 String data = editable.toString().trim();
                 titleLayout.setErrorEnabled(TextUtils.isEmpty(data) ? true : false);
+                addViewModel.addGoodsInfo.getValue().setGoodsName(data);
             }
         });
         desEt.addTextChangedListener(new TextWatcher() {
@@ -115,8 +124,54 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
             public void afterTextChanged(Editable editable) {
                 String data = editable.toString().trim();
                 desLayout.setErrorEnabled(TextUtils.isEmpty(data) ? true : false);
+                addViewModel.addGoodsInfo.getValue().setGoodsDescribe(data);
             }
         });
+        priceEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String data = editable.toString().trim();
+                try {
+                    addViewModel.addGoodsInfo.getValue().setGoodsPrice(Double.parseDouble(data));
+                } catch (NumberFormatException e) {
+
+                }
+
+            }
+        });
+        costPriceEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String data = editable.toString().trim();
+                try {
+                    addViewModel.addGoodsInfo.getValue().setGoodsCostPrice(Double.parseDouble(data));
+                } catch (NumberFormatException e) {
+
+                }
+
+            }
+        });
+
     }
 
     private void initData() {
@@ -137,7 +192,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onChanged(@Nullable GoodRepertory goodRepertory) {
                 if (goodRepertory != null) {
-                    goodsCountTv.setText(goodRepertory.getRepertoryCount());
+                    goodsCountTv.setText(goodRepertory.getRepertoryCount() + "");
                 }
             }
         });
@@ -152,6 +207,14 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
         });
         addViewModel.mAddRepertoryCount.postValue(0);
         addViewModel.findGoods(barCode);
+        addViewModel.mSureAdd.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if (aBoolean) {
+                    showDiff();
+                }
+            }
+        });
     }
 
     @Override
@@ -167,7 +230,13 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
         } else if (view.getId() == R.id.left_back_btn) {
             getActivity().finish();
         } else if (view.getId() == R.id.sure_add_goods_btn) {
-            checkAdd();
+            boolean canAdd = addViewModel.mSureAdd.getValue();
+            if (!canAdd) {
+                canAdd = checkAdd();
+                addViewModel.mSureAdd.postValue(canAdd);
+                return;
+            }
+            //添加
         } else if (view.getId() == R.id.goods_img) {
             ChoseImage.choseImageFromGallery(getContext(), 0x10);
         }
@@ -187,7 +256,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
     /**
      * 检查添加
      */
-    public void checkAdd() {
+    public boolean checkAdd() {
         boolean checkSuccess = true;
         //
         String goodsTitleStr = titleEt.getText().toString().trim();
@@ -204,6 +273,23 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
         desLayout.setError("输入商品描述");
         desLayout.setErrorEnabled(TextUtils.isEmpty(goodsDesStr) ? true : false);
         //
-
+        return checkSuccess;
     }
+
+    /**
+     * 显示不同的东西，
+     */
+    private void showDiff() {
+        Goods defaultGoods = addViewModel.defaultGoodsInfo.getValue();
+        Goods addGoods = addViewModel.addGoodsInfo.getValue();
+        goodsImg.setVisibility(defaultGoods.getGoodsImg().equalsIgnoreCase(addGoods.getGoodsImg()) ? View.INVISIBLE : View.VISIBLE);
+        titleLayout.setVisibility(defaultGoods.getGoodsName().equalsIgnoreCase(addGoods.getGoodsName()) ? View.INVISIBLE : View.VISIBLE);
+        desLayout.setVisibility(defaultGoods.getGoodsDescribe().equalsIgnoreCase(addGoods.getGoodsDescribe()) ? View.INVISIBLE : View.VISIBLE);
+        costLayout.setVisibility(defaultGoods.getGoodsCostPrice() == addGoods.getGoodsCostPrice() ? View.INVISIBLE : View.VISIBLE);
+        saleLayout.setVisibility(defaultGoods.getGoodsPrice() == addGoods.getGoodsPrice() ? View.INVISIBLE : View.VISIBLE);
+        barLayout.setVisibility(defaultGoods.getBarCode().equalsIgnoreCase(addGoods.getBarCode()) ? View.INVISIBLE : View.VISIBLE);
+        addCountLayout.setVisibility(addViewModel.mAddRepertoryCount.getValue() > 0 ? View.VISIBLE : View.INVISIBLE);
+        lastCountLayout.setVisibility(View.INVISIBLE);
+    }
+
 }

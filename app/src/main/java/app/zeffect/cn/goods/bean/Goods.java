@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 商品属性
  */
 @Table("goods_infos")
-public class Goods extends BaseGoods implements Serializable {
+public class Goods extends BaseGoods implements Serializable, Cloneable {
 
     public static final String COL_NAME = "name";
     public static final String COL_DESCRIBE = "describe";
@@ -28,7 +28,6 @@ public class Goods extends BaseGoods implements Serializable {
 
     @PrimaryKey(AssignType.AUTO_INCREMENT)
     private long id;
-
 
 
     @Ignore
