@@ -32,6 +32,7 @@
             android:textSize="16sp" />
 
         <views.zeffect.cn.darklib.DarkImage
+            android:id="@+id/delte_goods_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -175,6 +176,7 @@
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <views.zeffect.cn.darklib.DarkButton
+                    android:id="@+id/change_goods_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginLeft="8dp"

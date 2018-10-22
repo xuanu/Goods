@@ -2,6 +2,8 @@ package app.zeffect.cn.goods.ui.goods.GoodsInfo;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,8 +17,11 @@ import android.widget.TextView;
 import app.zeffect.cn.goods.R;
 import app.zeffect.cn.goods.bean.Goods;
 import app.zeffect.cn.goods.orm.GoodsOrm;
+import app.zeffect.cn.goods.ui.goods.addGoods.AddGoodsActivity;
 import app.zeffect.cn.goods.ui.main.GoodsRepository;
 import app.zeffect.cn.goods.utils.Constant;
+import app.zeffect.cn.goods.utils.DoAsync;
+import app.zeffect.cn.goods.utils.SnackbarUtil;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class GoodsInfoFragment extends Fragment implements View.OnClickListener {
@@ -55,6 +60,8 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener 
         mPriceTv = rootView.findViewById(R.id.goods_price_tv);
         mGoodsImg = rootView.findViewById(R.id.goods_img);
         rootView.findViewById(R.id.goods_sale_btn).setOnClickListener(this);
+        rootView.findViewById(R.id.delte_goods_btn).setOnClickListener(this);
+        rootView.findViewById(R.id.change_goods_btn).setOnClickListener(this);
     }
 
     private void initData() {
@@ -79,7 +86,24 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.left_back_btn) {
+        if (v.getId() == R.id.change_goods_btn) {
+            startActivity(new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.DATA, goodsInfos.getBarCode()));
+        } else if (v.getId() == R.id.delte_goods_btn) {
+            new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("删除商品")
+                    .setContentText("确定要删除该商品吗？与它关联的所有信息都将删除！")
+                    .setCancelText("取消")
+                    .setConfirmText("确认删除")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                            deleteGoods();
+                            sweetAlertDialog.dismissWithAnimation();
+                        }
+                    })
+                    .show();
+        } else if (v.getId() == R.id.left_back_btn) {
             getActivity().finish();
         } else if (v.getId() == R.id.goods_sale_btn) {
             if (goodsInfos != null) {
@@ -106,5 +130,26 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener 
                         .show();
             }
         }
+    }
+
+    private void deleteGoods() {
+        new DoAsync<Void, Void, Boolean>(getActivity()) {
+            @Override
+            protected Boolean doInBackground(Context pTarget, Void... voids) throws Exception {
+                long count = GoodsOrm.getInstance().delete(goodsInfos);
+                return count > 0;
+            }
+
+            @Override
+            protected void onPostExecute(Context pTarget, Boolean pResult) throws Exception {
+                super.onPostExecute(pTarget, pResult);
+                if (pResult != null && pResult) {
+                    SnackbarUtil.ShortSnackbar(rootView, "删除成功", SnackbarUtil.Warning).show();
+                    getActivity().finish();
+                } else {
+                    SnackbarUtil.ShortSnackbar(rootView, "删除失败", SnackbarUtil.Info).show();
+                }
+            }
+        }.execute();
     }
 }
