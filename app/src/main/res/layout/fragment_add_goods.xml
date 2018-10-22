@@ -307,17 +307,48 @@
                 </LinearLayout>
 
 
-                <views.zeffect.cn.darklib.DarkButton
-                    android:id="@+id/sure_add_goods_btn"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/info_shape_bg"
-                    android:paddingLeft="80dp"
-                    android:paddingRight="80dp"
-                    android:text="确定添加"
-                    android:textColor="#fff"
-                    android:textSize="16sp" />
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <views.zeffect.cn.darklib.DarkButton
+                        android:id="@+id/sure_add_goods_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:background="@drawable/info_shape_bg"
+                        android:paddingLeft="80dp"
+                        android:paddingRight="80dp"
+                        android:text="确定添加"
+                        android:textColor="#fff"
+                        android:textSize="16sp"
+                        android:visibility="visible" />
+
+                    <views.zeffect.cn.darklib.DarkButton
+                        android:id="@+id/want_to_change_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:background="@drawable/info_shape_bg"
+                        android:text="继续修改"
+                        android:textColor="#fff"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+
+                    <views.zeffect.cn.darklib.DarkButton
+                        android:id="@+id/true_to_add_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/info_shape_bg"
+                        android:text="确认添加"
+                        android:textColor="#fff"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>

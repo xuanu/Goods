@@ -1,9 +1,12 @@
 package app.zeffect.cn.goods.ui.goods.addGoods;
 
+import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,18 +25,32 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import java.io.File;
+import java.util.IllegalFormatCodePointException;
+import java.util.List;
+import java.util.UUID;
+
 import app.zeffect.cn.goods.R;
 import app.zeffect.cn.goods.bean.GoodRepertory;
 import app.zeffect.cn.goods.bean.Goods;
+import app.zeffect.cn.goods.orm.GoodsOrm;
+import app.zeffect.cn.goods.ui.goods.choseimg.ChoseImageFragment;
+import app.zeffect.cn.goods.ui.main.GoodsRepository;
 import app.zeffect.cn.goods.utils.ChoseImage;
 import app.zeffect.cn.goods.utils.Constant;
+import app.zeffect.cn.goods.utils.DoAsync;
+import app.zeffect.cn.goods.utils.Md5Utils;
+import app.zeffect.cn.goods.utils.PermissionUtils;
 import app.zeffect.cn.goods.utils.SnackbarUtil;
 
-public class AddGoodsFragment extends Fragment implements View.OnClickListener {
+public class AddGoodsFragment extends Fragment implements View.OnClickListener, ChoseImageFragment.ImgClick {
     private View rootView;
     private String barCode = "";
 
     private AddViewModel addViewModel;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,8 +83,12 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
     private TextView goodsCountTv, addGoodsCountTv, goodsBarTv;
     private ImageView goodsImg;
     private View costLayout, lastCountLayout, addCountLayout, saleLayout, barLayout;
+    private View addCountBtn, removeCountBtn, addBarBtn, sureToAddBtn;
+    private View trueToAddBtn, wantToChangeBtn;
 
     private void initView() {
+        trueToAddBtn = rootView.findViewById(R.id.true_to_add_btn);
+        wantToChangeBtn = rootView.findViewById(R.id.want_to_change_btn);
         saleLayout = rootView.findViewById(R.id.sale_layout);
         barLayout = rootView.findViewById(R.id.bar_layout);
         addCountLayout = rootView.findViewById(R.id.add_count_layout);
@@ -84,12 +105,18 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
         costLayout = rootView.findViewById(R.id.cost_layout);
         goodsBarTv = rootView.findViewById(R.id.goods_bar_tv);
         //
-        rootView.findViewById(R.id.remove_count_btn).setOnClickListener(this);
-        rootView.findViewById(R.id.add_count_btn).setOnClickListener(this);
-        rootView.findViewById(R.id.add_bar_btn).setOnClickListener(this);
+        removeCountBtn = rootView.findViewById(R.id.remove_count_btn);
+        removeCountBtn.setOnClickListener(this);
+        addCountBtn = rootView.findViewById(R.id.add_count_btn);
+        addCountBtn.setOnClickListener(this);
+        addBarBtn = rootView.findViewById(R.id.add_bar_btn);
+        addBarBtn.setOnClickListener(this);
         rootView.findViewById(R.id.left_back_btn).setOnClickListener(this);
-        rootView.findViewById(R.id.sure_add_goods_btn).setOnClickListener(this);
+        sureToAddBtn = rootView.findViewById(R.id.sure_add_goods_btn);
+        sureToAddBtn.setOnClickListener(this);
         rootView.findViewById(R.id.goods_img).setOnClickListener(this);
+        trueToAddBtn.setOnClickListener(this);
+        wantToChangeBtn.setOnClickListener(this);
         //
         titleEt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -210,15 +237,14 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
         addViewModel.mSureAdd.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
-                if (aBoolean) {
-                    showDiff();
-                }
+                readToAdd(aBoolean);
             }
         });
     }
 
     @Override
     public void onClick(View view) {
+        clearFouce();
         if (view.getId() == R.id.add_count_btn) {
             int count = addViewModel.mAddRepertoryCount.getValue();
             addViewModel.mAddRepertoryCount.postValue(count + 1);
@@ -238,17 +264,67 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
             }
             //添加
         } else if (view.getId() == R.id.goods_img) {
-            ChoseImage.choseImageFromGallery(getContext(), 0x10);
+//            ChoseImage.choseImageFromGallery(getContext(), 0x10);
+            new ChoseImageFragment().appendClick(this).show(getFragmentManager(), ChoseImageFragment.class.getName());
+        } else if (view.getId() == R.id.want_to_change_btn) {
+            addViewModel.mSureAdd.postValue(false);
+        } else if (view.getId() == R.id.true_to_add_btn) {
+            new DoAsync<Void, Void, Void>(getActivity()) {
+
+                @Override
+                protected void onPreExecute(Context pTarget) throws Exception {
+                    super.onPreExecute(pTarget);
+                    SnackbarUtil.ShortSnackbar(rootView, "正在添加……", SnackbarUtil.Info).show();
+                }
+
+                @Override
+                protected Void doInBackground(Context pTarget, Void... voids) throws Exception {
+                    Goods addGoods = addViewModel.addGoodsInfo.getValue();
+                    long goodId = addGoods.getId();
+                    if (goodId < 1) {
+                        GoodsOrm.getInstance().save(addGoods);
+                        String barCode = addGoods.getBarCode();
+                        List<Goods> searchGoods = GoodsRepository.searchGoodsBarCode(barCode);
+                        if (searchGoods != null && !searchGoods.isEmpty()) {
+                            goodId = searchGoods.get(0).getId();
+                        }
+                    }
+                    GoodRepertory repertory = addViewModel.mGoodRepertory.getValue();
+                    repertory.setGoodsId(goodId);
+                    int addCount = addViewModel.mAddRepertoryCount.getValue();
+                    int count = repertory.getRepertoryCount();
+                    int total = repertory.getRepertoryTotal();
+                    repertory.setRepertoryCount(count + addCount);
+                    repertory.setRepertoryTotal(total + addCount);
+                    GoodsOrm.getInstance().save(repertory);
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Context pTarget, Void pResult) throws Exception {
+                    super.onPostExecute(pTarget, pResult);
+                    SnackbarUtil.ShortSnackbar(rootView, "添加成功", SnackbarUtil.Confirm).show();
+                    if (pTarget instanceof Activity) {
+                        getActivity().finish();
+                    }
+                }
+            }.execute();
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0x10) {
+        if (requestCode == REQ_GALLERY_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 String imgPath = ChoseImage.getGalleryPath(getContext(), data);
-                Log.e("zeffect", "img path:" + imgPath);
+                addViewModel.addGoodsInfo.getValue().setGoodsImg(imgPath);
+                Glide.with(getContext()).load(new File(imgPath)).into(goodsImg);
+            }
+        } else if (requestCode == REQ_TAKE_PHOTO_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                addViewModel.addGoodsInfo.getValue().setGoodsImg(takePhotoFile.getAbsolutePath());
+                Glide.with(getContext()).load(takePhotoFile).into(goodsImg);
             }
         }
     }
@@ -277,19 +353,88 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * 显示不同的东西，
+     * 准备添加
+     *
+     * @param ready true准备添加，false取消准备
      */
-    private void showDiff() {
+    private void readToAdd(boolean ready) {
         Goods defaultGoods = addViewModel.defaultGoodsInfo.getValue();
         Goods addGoods = addViewModel.addGoodsInfo.getValue();
-        goodsImg.setVisibility(defaultGoods.getGoodsImg().equalsIgnoreCase(addGoods.getGoodsImg()) ? View.INVISIBLE : View.VISIBLE);
-        titleLayout.setVisibility(defaultGoods.getGoodsName().equalsIgnoreCase(addGoods.getGoodsName()) ? View.INVISIBLE : View.VISIBLE);
-        desLayout.setVisibility(defaultGoods.getGoodsDescribe().equalsIgnoreCase(addGoods.getGoodsDescribe()) ? View.INVISIBLE : View.VISIBLE);
-        costLayout.setVisibility(defaultGoods.getGoodsCostPrice() == addGoods.getGoodsCostPrice() ? View.INVISIBLE : View.VISIBLE);
-        saleLayout.setVisibility(defaultGoods.getGoodsPrice() == addGoods.getGoodsPrice() ? View.INVISIBLE : View.VISIBLE);
-        barLayout.setVisibility(defaultGoods.getBarCode().equalsIgnoreCase(addGoods.getBarCode()) ? View.INVISIBLE : View.VISIBLE);
-        addCountLayout.setVisibility(addViewModel.mAddRepertoryCount.getValue() > 0 ? View.VISIBLE : View.INVISIBLE);
-        lastCountLayout.setVisibility(View.INVISIBLE);
+        if (defaultGoods != null && addGoods != null) {
+            goodsImg.setVisibility(defaultGoods.getGoodsImg().equalsIgnoreCase(addGoods.getGoodsImg()) && ready ? View.INVISIBLE : View.VISIBLE);
+            titleLayout.setVisibility(defaultGoods.getGoodsName().equalsIgnoreCase(addGoods.getGoodsName()) && ready ? View.INVISIBLE : View.VISIBLE);
+            desLayout.setVisibility(defaultGoods.getGoodsDescribe().equalsIgnoreCase(addGoods.getGoodsDescribe()) && ready ? View.INVISIBLE : View.VISIBLE);
+            costLayout.setVisibility(defaultGoods.getGoodsCostPrice() == addGoods.getGoodsCostPrice() && ready ? View.INVISIBLE : View.VISIBLE);
+            saleLayout.setVisibility(defaultGoods.getGoodsPrice() == addGoods.getGoodsPrice() && ready ? View.INVISIBLE : View.VISIBLE);
+            barLayout.setVisibility(defaultGoods.getBarCode().equalsIgnoreCase(addGoods.getBarCode()) && ready ? View.INVISIBLE : View.VISIBLE);
+            addCountLayout.setVisibility(addViewModel.mAddRepertoryCount.getValue() > 0 && ready ? View.VISIBLE : View.INVISIBLE);
+            lastCountLayout.setVisibility(ready ? View.INVISIBLE : View.VISIBLE);
+            sureToAddBtn.setVisibility(ready ? View.GONE : View.VISIBLE);
+            wantToChangeBtn.setVisibility(ready ? View.VISIBLE : View.GONE);
+            trueToAddBtn.setVisibility(ready ? View.VISIBLE : View.GONE);
+            //全部不可操作
+            goodsImg.setEnabled(ready ? false : true);
+            titleEt.setEnabled(ready ? false : true);
+            desEt.setEnabled(ready ? false : true);
+            priceEt.setEnabled(ready ? false : true);
+            costPriceEt.setEnabled(ready ? false : true);
+            addBarBtn.setEnabled(ready ? false : true);
+            addBarBtn.setVisibility(ready ? View.INVISIBLE : View.VISIBLE);
+            addCountBtn.setEnabled(ready ? false : true);
+            addCountBtn.setVisibility(ready ? View.INVISIBLE : View.VISIBLE);
+            removeCountBtn.setEnabled(ready ? false : true);
+            removeCountBtn.setVisibility(ready ? View.INVISIBLE : View.VISIBLE);
+            //
+        }
+        clearFouce();
     }
 
+
+    private void clearFouce() {
+        titleEt.clearFocus();
+        desEt.clearFocus();
+        priceEt.clearFocus();
+        costPriceEt.clearFocus();
+    }
+
+    public static final int REQ_GALLERY_CODE = 0X10, REQ_TAKE_PHOTO_CODE = 0X11;
+
+    private File takePhotoFile = null;
+
+    public static final int REQ_SD_PER_CODE = 0X12;
+    public static final int REQ_CAMERA_CODE = 0x13;
+
+    @Override
+    public void clickType(int type) {
+        if (type == ChoseImageFragment.TYPE_GALLERY) {
+            if (PermissionUtils.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, REQ_SD_PER_CODE)) {
+                ChoseImage.choseImageFromGallery(getContext(), REQ_GALLERY_CODE);
+            }
+        } else if (type == ChoseImageFragment.TYPE_TAKE_PHOTO) {
+            if (PermissionUtils.checkPermission(this, Manifest.permission.CAMERA, REQ_CAMERA_CODE)) {
+                takePhoto();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (PermissionUtils.verifyPermissions(grantResults)) {
+            if (requestCode == REQ_CAMERA_CODE) {
+                takePhoto();
+            } else if (requestCode == REQ_SD_PER_CODE) {
+                ChoseImage.choseImageFromGallery(getContext(), REQ_GALLERY_CODE);
+            }
+        } else {
+            SnackbarUtil.ShortSnackbar(rootView, "权限被拒绝", SnackbarUtil.Warning).show();
+        }
+    }
+
+
+    private void takePhoto() {
+        String goodsName = UUID.randomUUID().toString() + "_" + Md5Utils.md5(barCode) + ".png";
+        takePhotoFile = new File(getContext().getExternalFilesDir("goodimg"), goodsName);
+        ChoseImage.choseFromCameraCapture(getContext(), takePhotoFile, REQ_TAKE_PHOTO_CODE);
+    }
 }

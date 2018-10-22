@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="选择方式"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginTop="8dp"
+        android:background="#D6D6D6" />
+
+    <views.zeffect.cn.darklib.DarkButton
+        android:id="@+id/ptcp_to_takephoto_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/userinfo_check_header_image_selector"
+        android:gravity="center"
+        android:text="拍照"
+        android:textColor="#2083ff" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#D6D6D6" />
+
+    <views.zeffect.cn.darklib.DarkButton
+        android:id="@+id/ptcp_to_gally_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/userinfo_check_header_image_selector"
+        android:gravity="center"
+        android:text="从相册选择"
+        android:textColor="#2083ff" />
+
+</LinearLayout>

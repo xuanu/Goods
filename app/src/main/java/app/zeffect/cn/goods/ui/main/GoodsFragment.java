@@ -106,8 +106,7 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
         } else if (v.getId() == R.id.scan_btn) {
             scan();
         } else if (v.getId() == R.id.fab_scan) {
-//            scan();
-            startActivity(new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.DATA, "6957735788861"));
+            scan();
         } else if (v.getId() == R.id.add_goods_btn) {
 
         }
@@ -174,6 +173,7 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
                                         @Override
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                                             sweetAlertDialog.dismissWithAnimation();
+                                            startActivity(new Intent(pTarget, AddGoodsActivity.class).putExtra(Constant.DATA, barCode));
                                         }
                                     })
                                     .show();

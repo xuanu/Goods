@@ -35,7 +35,7 @@ public class ChoseImage {
             pFile = new File(pContext.getExternalCacheDir(), System.currentTimeMillis() + "");
         }
         Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(pFile));
+        intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider8.getUriForFile(pContext, pFile));
         if (pContext instanceof Activity) {
             ((Activity) pContext).startActivityForResult(intentFromCapture, pRequestCode);
         }
