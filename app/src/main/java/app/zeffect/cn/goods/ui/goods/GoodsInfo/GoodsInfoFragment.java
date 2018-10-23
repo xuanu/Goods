@@ -69,8 +69,6 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
         mPriceTv = rootView.findViewById(R.id.goods_price_tv);
         mGoodsImg = rootView.findViewById(R.id.goods_img);
         rootView.findViewById(R.id.goods_sale_btn).setOnClickListener(this);
-        rootView.findViewById(R.id.delte_goods_btn).setOnClickListener(this);
-        rootView.findViewById(R.id.change_goods_btn).setOnClickListener(this);
     }
 
     private void initData() {
@@ -100,7 +98,7 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.more_action_btn) {
-            new GoodsActionFragment().appendAction(this).show(getFragmentManager(), GoodsActionFragment.class.getName());
+            new GoodsActionFragment().appendAction(this, goodsInfos.getId()).show(getFragmentManager(), GoodsActionFragment.class.getName());
         } else if (v.getId() == R.id.left_back_btn) {
             getActivity().finish();
         } else if (v.getId() == R.id.goods_sale_btn) {
@@ -166,8 +164,7 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
         new DoAsync<Void, Void, Boolean>(getActivity()) {
             @Override
             protected Boolean doInBackground(Context pTarget, Void... voids) throws Exception {
-                long count = GoodsOrm.getInstance().delete(goodsInfos);
-                return count > 0;
+                return GoodsRepository.delGoods(goodsInfos);
             }
 
             @Override

@@ -9,7 +9,10 @@ import com.litesuits.orm.db.assit.WhereBuilder;
 import java.util.Collections;
 import java.util.List;
 
+import app.zeffect.cn.goods.bean.GoodRepertory;
 import app.zeffect.cn.goods.bean.Goods;
+import app.zeffect.cn.goods.bean.GoodsIn;
+import app.zeffect.cn.goods.bean.GoodsSale;
 import app.zeffect.cn.goods.orm.GoodsOrm;
 import app.zeffect.cn.goods.utils.GoodsUtils;
 
@@ -96,6 +99,21 @@ public class GoodsRepository {
         return findGoods;
     }
 
+
+    /***
+     * 删除商品
+     * @param goods 商品
+     * @return
+     */
+    public static boolean delGoods(Goods goods) {
+        if (goods == null) return false;
+        GoodsOrm.getInstance().delete(goods);//删除删除
+        long goodsId = goods.getId();
+        GoodsOrm.getInstance().delete(new WhereBuilder(GoodRepertory.class).where(GoodRepertory.COL_GOODS_ID, goodsId));//库存
+        GoodsOrm.getInstance().delete(new WhereBuilder(GoodsIn.class).where(GoodsIn.COL_GOODS_ID, goodsId));//进货表
+        GoodsOrm.getInstance().delete(new WhereBuilder(GoodsSale.class).where(GoodsSale.COL_GOODS_ID, goodsId));//卖出记录
+        return true;
+    }
 
     public static boolean saveGoods(Goods goods) {
         if (goods == null) return false;

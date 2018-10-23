@@ -9,4 +9,7 @@
     <color name="color_price">#ff3e2f</color>
     <color name="setting_sets_rootlayout">#E4E3E3</color>
     <color name="white">#ffffff</color>
+    <color name="color_action_bg">#ffffff</color>
+    <color name="color_action_icon">#454c57</color>
+    <color name="color_action_txt">#333333</color>
 </resources>

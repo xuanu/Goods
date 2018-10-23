@@ -1,7 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <views.zeffect.cn.darklib.DarkText
+        android:id="@+id/goods_log_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="商品记录"
+        android:textColor="@color/color_action_txt"
+        android:textSize="18sp" />
+
+    <views.zeffect.cn.darklib.DarkText
+        android:id="@+id/del_goods_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="删除商品"
+        android:textColor="@color/color_action_txt"
+        android:textSize="18sp" />
+
+    <views.zeffect.cn.darklib.DarkText
+        android:id="@+id/edit_goods_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="编辑商品"
+        android:textColor="@color/color_action_txt"
+        android:textSize="18sp" />
 
 </LinearLayout>
