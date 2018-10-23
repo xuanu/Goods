@@ -1,10 +1,14 @@
 package app.zeffect.cn.goods.ui.main;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
+import java.io.File;
 import java.util.List;
 
 import app.zeffect.cn.goods.R;
@@ -28,6 +32,10 @@ public class GoodsAdapter extends BaseQuickAdapter<Goods, BaseViewHolder> {
             helper.setText(R.id.item_des_tv, item.getGoodsDescribe());
         }
         helper.setText(R.id.item_price_tv, "￥" + item.getGoodsPrice());
-        helper.setText(R.id.item_bar_tv,"条形码："+item.getBarCode());
+        helper.setText(R.id.item_bar_tv, "条形码：" + item.getBarCode());
+        String imgPath = item.getGoodsImg();
+        if (!TextUtils.isEmpty(imgPath)) {
+            Glide.with(helper.itemView.getContext()).load(new File(imgPath)).into((ImageView) helper.getView(R.id.item_goods_img));
+        }
     }
 }

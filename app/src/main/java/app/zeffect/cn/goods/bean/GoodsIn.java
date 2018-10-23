@@ -14,6 +14,9 @@ public class GoodsIn extends BaseGoods {
     public static final String COL_ID = "id";
     public static final String COL_GOODS_ID = "goodsid";
     public static final String COL_GOODS_IN_COUNT = "incount";
+    public static final String COL_GOODS_PRODUCE_TIME = "producetime";
+    public static final String COL_GOODS_EXPIRATION_DATE = "expirationdate";
+
 
     @PrimaryKey(AssignType.AUTO_INCREMENT)
     @Column(COL_ID)
@@ -22,4 +25,8 @@ public class GoodsIn extends BaseGoods {
     private long goodsId;//关联商品ID（记下关联，可以追溯）
     @Column(COL_GOODS_IN_COUNT)
     private int goodsInCount;
+    @Column(COL_GOODS_PRODUCE_TIME)
+    private long producedTime;//生产日期
+    @Column(COL_GOODS_EXPIRATION_DATE)
+    private int expirationDate;//保质期
 }

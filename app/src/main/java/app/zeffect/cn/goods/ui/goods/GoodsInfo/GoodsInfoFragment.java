@@ -1,18 +1,27 @@
 package app.zeffect.cn.goods.ui.goods.GoodsInfo;
 
+import android.app.ActivityOptions;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
+import java.io.File;
 
 import app.zeffect.cn.goods.R;
 import app.zeffect.cn.goods.bean.Goods;
@@ -24,7 +33,7 @@ import app.zeffect.cn.goods.utils.DoAsync;
 import app.zeffect.cn.goods.utils.SnackbarUtil;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class GoodsInfoFragment extends Fragment implements View.OnClickListener {
+public class GoodsInfoFragment extends Fragment implements View.OnClickListener, GoodsActionFragment.OnClickAction {
 
     private View rootView;
 
@@ -74,6 +83,10 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener 
                     mDesTv.setText(goods.getGoodsDescribe());
 //                    mCountTv.setText(goods.getGoodsCount() + "");todo
                     mPriceTv.setText("￥" + goods.getGoodsPrice() + "");
+                    String imgPath = goods.getGoodsImg();
+                    if (!TextUtils.isEmpty(imgPath)) {
+                        Glide.with(getContext()).load(new File(imgPath)).into(mGoodsImg);
+                    }
                 }
             }
         });
@@ -86,23 +99,8 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.change_goods_btn) {
-            startActivity(new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.DATA, goodsInfos.getBarCode()));
-        } else if (v.getId() == R.id.delte_goods_btn) {
-            new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("删除商品")
-                    .setContentText("确定要删除该商品吗？与它关联的所有信息都将删除！")
-                    .setCancelText("取消")
-                    .setConfirmText("确认删除")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                            deleteGoods();
-                            sweetAlertDialog.dismissWithAnimation();
-                        }
-                    })
-                    .show();
+        if (v.getId() == R.id.more_action_btn) {
+            new GoodsActionFragment().appendAction(this).show(getFragmentManager(), GoodsActionFragment.class.getName());
         } else if (v.getId() == R.id.left_back_btn) {
             getActivity().finish();
         } else if (v.getId() == R.id.goods_sale_btn) {
@@ -132,6 +130,38 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener 
         }
     }
 
+
+    private void gotoChangeGoods(String barCode) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Pair<View, String> imgPair = Pair.create((View) mGoodsImg, getResources().getString(R.string.tran_img));
+            Pair<View, String> titlePair = Pair.create((View) mTitleTv, getResources().getString(R.string.tran_title));
+            Pair<View, String> desPair = Pair.create((View) mDesTv, getResources().getString(R.string.tran_des));
+            Pair<View, String> pricePair = Pair.create((View) mPriceTv, getResources().getString(R.string.tran_price));
+            ActivityCompat.startActivity(getContext(), new Intent(getContext(), GoodsInfoActivity.class).putExtra(Constant.DATA, barCode), ActivityOptions.makeSceneTransitionAnimation(getActivity(), imgPair, titlePair, desPair, pricePair).toBundle());
+        } else {
+            startActivity(new Intent(getContext(), GoodsInfoActivity.class).putExtra(Constant.DATA, barCode));
+        }
+        startActivity(new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.DATA, goodsInfos.getBarCode()));
+    }
+
+
+    private void readyDeleteGoods() {
+        new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("删除商品")
+                .setContentText("确定要删除该商品吗？与它关联的所有信息都将删除！")
+                .setCancelText("取消")
+                .setConfirmText("确认删除")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        deleteGoods();
+                        sweetAlertDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
+    }
+
     private void deleteGoods() {
         new DoAsync<Void, Void, Boolean>(getActivity()) {
             @Override
@@ -151,5 +181,20 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener 
                 }
             }
         }.execute();
+    }
+
+    @Override
+    public void delGoods(long goodId) {
+        readyDeleteGoods();
+    }
+
+    @Override
+    public void editGoods(long goodId) {
+        gotoChangeGoods(goodsInfos.getBarCode());
+    }
+
+    @Override
+    public void goodsLog(long goodId) {
+
     }
 }

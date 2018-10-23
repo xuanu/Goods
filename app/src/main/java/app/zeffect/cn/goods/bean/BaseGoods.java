@@ -7,6 +7,8 @@ import com.litesuits.orm.db.annotation.Column;
 public class BaseGoods {
 
     public static final String COL_GOODS_COST_PRICE = "costprice";
+    public static final String COL_TITLE_SPELL = "titlespell";
+
 
     @Column(Goods.COL_NAME)
     private String goodsName = "";
@@ -23,6 +25,18 @@ public class BaseGoods {
 
     @Column(Goods.COL_GOODS_CREAT_TIME)
     private long creatTime = 0;
+
+    @Column(COL_TITLE_SPELL)
+    private String titleSpell;
+
+    public String getTitleSpell() {
+        return titleSpell;
+    }
+
+    public BaseGoods setTitleSpell(String titleSpell) {
+        this.titleSpell = titleSpell;
+        return this;
+    }
 
     public double getGoodsCostPrice() {
         return goodsCostPrice;

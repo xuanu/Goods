@@ -19,18 +19,12 @@ import android.widget.FrameLayout;
  * 原文：https://blog.csdn.net/klxh2009/article/details/80393245
  * 版权声明：本文为博主原创文章，转载请附上博文链接！
  */
-public class BaseBottomSheetFragment extends BottomSheetDialogFragment {
+public abstract class BaseBottomSheetFragment extends BottomSheetDialogFragment {
 
     private BottomSheetBehavior<FrameLayout> behavior;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
+    public final void onStart() {
         super.onStart();
         // 设置软键盘不自动弹出
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -45,7 +39,4 @@ public class BaseBottomSheetFragment extends BottomSheetDialogFragment {
         }
     }
 
-    public BottomSheetBehavior<FrameLayout> getBehavior() {
-        return behavior;
-    }
 }
