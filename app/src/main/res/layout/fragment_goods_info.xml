@@ -131,7 +131,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-                    android:text="1"
+                    android:text="0"
                     android:textColor="@color/color_price"
                     android:textSize="20sp" />
 
@@ -182,6 +182,7 @@
                     android:layout_marginLeft="8dp"
                     android:background="@drawable/info_shape_bg"
                     android:lines="1"
+                    android:minEms="4"
                     android:paddingLeft="24dp"
                     android:paddingRight="24dp"
                     android:text="售出商品"

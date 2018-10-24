@@ -1,5 +1,14 @@
 开源代码许可
 
+### [belerweb/pinyin4j](https://github.com/belerweb/pinyin4j);
+
+
+### [greenrobot/EventBus](https://github.com/greenrobot/EventBus);
+Copyright (C) 2012-2017 Markus Junginger, greenrobot (http://greenrobot.org)
+EventBus binaries and source code can be used according to the Apache License, Version 2.0.
+http://www.apache.org/licenses/LICENSE-2.0
+
+
 ### [CalendarView](https://github.com/huanghaibin-dev/CalendarView);
 Copyright (C) 2013 huanghaibin_dev huanghaibin_dev@163.com
 Licensed under the Apache License, Version 2.0 (the "License");

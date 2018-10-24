@@ -27,6 +27,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.util.IllegalFormatCodePointException;
 import java.util.List;
@@ -36,6 +38,7 @@ import app.zeffect.cn.goods.R;
 import app.zeffect.cn.goods.bean.GoodRepertory;
 import app.zeffect.cn.goods.bean.Goods;
 import app.zeffect.cn.goods.bean.GoodsIn;
+import app.zeffect.cn.goods.eventbean.UpdateGoods;
 import app.zeffect.cn.goods.orm.GoodsOrm;
 import app.zeffect.cn.goods.ui.goods.choseimg.ChoseImageFragment;
 import app.zeffect.cn.goods.ui.main.GoodsRepository;
@@ -285,6 +288,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
                 @Override
                 protected Void doInBackground(Context pTarget, Void... voids) throws Exception {
                     Goods addGoods = addViewModel.addGoodsInfo.getValue();
+                    //添加首拼
                     long goodId = addGoods.getId();
                     //商品表
                     GoodsOrm.getInstance().save(addGoods);
@@ -318,6 +322,8 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
                     goodsIn.setGoodsInCount(addCount);
                     //生产日期，保质期，还没有填写
                     GoodsOrm.getInstance().save(goodsIn);
+                    //
+                    EventBus.getDefault().post(new UpdateGoods(goodId));
                     return null;
                 }
 

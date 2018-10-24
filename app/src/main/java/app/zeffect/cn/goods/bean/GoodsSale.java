@@ -19,4 +19,31 @@ public class GoodsSale extends BaseGoods {
     private long goodsId;//关联商品ID（记下关联，可以追溯）
     @Column(COL_GOODS_SALE_COUNT)
     private int goodsSaleCount;
+
+    public long getId() {
+        return id;
+    }
+
+    public GoodsSale setId(long id) {
+        this.id = id;
+        return this;
+    }
+
+    public long getGoodsId() {
+        return goodsId;
+    }
+
+    public GoodsSale setGoodsId(long goodsId) {
+        this.goodsId = goodsId;
+        return this;
+    }
+
+    public int getGoodsSaleCount() {
+        return goodsSaleCount;
+    }
+
+    public GoodsSale setGoodsSaleCount(int goodsSaleCount) {
+        this.goodsSaleCount = goodsSaleCount;
+        return this;
+    }
 }

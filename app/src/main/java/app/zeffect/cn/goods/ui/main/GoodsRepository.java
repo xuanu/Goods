@@ -100,6 +100,33 @@ public class GoodsRepository {
     }
 
 
+    public static boolean saleGoods(Goods goods, int saleCount) {
+        if (goods == null) return false;
+        long goodsId = goods.getId();
+        //库存表
+        List<GoodRepertory> goodRepertorys = GoodsOrm.getInstance().query(new QueryBuilder<>(GoodRepertory.class).whereEquals(GoodRepertory.COL_GOODS_ID, goodsId));
+        if (goodRepertorys != null && !goodRepertorys.isEmpty()) {
+            GoodRepertory tmpRepertory = goodRepertorys.get(0);
+            int tmpCount = tmpRepertory.getRepertoryCount();
+            tmpRepertory.setRepertoryCount(tmpCount + saleCount);
+            GoodsOrm.getInstance().save(tmpRepertory);
+        }
+        //卖出表
+        GoodsSale goodsSale = new GoodsSale();
+        goodsSale.setGoodsId(goodsId);
+        goodsSale.setGoodsSaleCount(saleCount);
+        goodsSale.setBarCode(goods.getBarCode());
+        goodsSale.setCreatTime(System.currentTimeMillis());
+        goodsSale.setGoodsCostPrice(goods.getGoodsCostPrice());
+        goodsSale.setGoodsDescribe(goods.getGoodsDescribe());
+        goodsSale.setGoodsImg(goods.getGoodsImg());
+        goodsSale.setGoodsName(goods.getGoodsName());
+        goodsSale.setGoodsPrice(goods.getGoodsPrice());
+        goodsSale.setTitleSpell(goods.getTitleSpell());
+        GoodsOrm.getInstance().save(goodsSale);
+        return true;
+    }
+
     /***
      * 删除商品
      * @param goods 商品

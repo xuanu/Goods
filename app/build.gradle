@@ -45,4 +45,6 @@ dependencies {
     implementation('com.haibin:calendarview:3.4.8') {
         transitive = false
     }
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.belerweb:pinyin4j:2.5.1'
 }

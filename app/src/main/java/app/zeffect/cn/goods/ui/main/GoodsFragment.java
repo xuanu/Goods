@@ -24,12 +24,20 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.litesuits.orm.db.assit.WhereBuilder;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import app.zeffect.cn.goods.R;
 import app.zeffect.cn.goods.bean.Goods;
+import app.zeffect.cn.goods.eventbean.DelGoods;
+import app.zeffect.cn.goods.eventbean.UpdateGoods;
+import app.zeffect.cn.goods.orm.GoodsOrm;
 import app.zeffect.cn.goods.ui.goods.GoodsInfo.GoodsInfoActivity;
 import app.zeffect.cn.goods.ui.goods.addGoods.AddGoodsActivity;
 import app.zeffect.cn.goods.ui.match.MatchBarActivity;
@@ -46,6 +54,74 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void delGoods(DelGoods delGoods) {
+        long goodsId = delGoods.goodId;
+        if (goodsId <= 0) return;
+        new DoAsync<Long, Void, Integer>(getActivity()) {
+            @Override
+            protected Integer doInBackground(Context pTarget, Long... longs) throws Exception {
+                int pos = -1;
+                long goodsId = longs[0];
+                for (int i = 0; i < goodsList.size(); i++) {
+                    if (goodsId == goodsList.get(i).getId()) {
+                        pos = i;
+                        break;
+                    }
+                }
+                return pos;
+            }
+
+            @Override
+            protected void onPostExecute(Context pTarget, Integer pResult) throws Exception {
+                super.onPostExecute(pTarget, pResult);
+                if (pResult != null) {
+                    goodsList.remove(pResult);
+                    goodsAdapter.notifyItemRemoved(pResult);
+                }
+            }
+        }.execute(goodsId);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateGoods(UpdateGoods updateGoods) {
+        long goodsId = updateGoods.goodId;
+        if (goodsId <= 0) return;
+        new DoAsync<Long, Void, Integer>(getActivity()) {
+            @Override
+            protected Integer doInBackground(Context pTarget, Long... longs) throws Exception {
+                int pos = -1;
+                long goodsId = longs[0];
+                for (int i = 0; i < goodsList.size(); i++) {
+                    if (goodsId == goodsList.get(i).getId()) {
+                        Goods tmpGoood = GoodsOrm.getInstance().queryById(goodsId, Goods.class);
+                        if (tmpGoood != null) {
+                            goodsList.set(i, tmpGoood);
+                        }
+                        pos = i;
+                        break;
+                    }
+                }
+                return pos;
+            }
+
+            @Override
+            protected void onPostExecute(Context pTarget, Integer pResult) throws Exception {
+                super.onPostExecute(pTarget, pResult);
+                if (pResult != null) {
+                    goodsAdapter.notifyItemChanged(pResult);
+                }
+            }
+        }.execute(goodsId);
     }
 
     @Nullable
