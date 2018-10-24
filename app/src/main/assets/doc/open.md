@@ -1,5 +1,10 @@
 开源代码许可
 
+### [CalendarView](https://github.com/huanghaibin-dev/CalendarView);
+Copyright (C) 2013 huanghaibin_dev huanghaibin_dev@163.com
+Licensed under the Apache License, Version 2.0 (the "License");
+http://www.apache.org/licenses/LICENSE-2.0
+
 ### [zBarLibary](https://github.com/bertsir/zBarLibary);
 MIT License
 Copyright (c) 2018 bertsir

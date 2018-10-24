@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import app.zeffect.cn.goods.R;
-import app.zeffect.cn.goods.ui.BaseActivity;
+import app.zeffect.cn.goods.ui.base.BaseActivity;
 
 /***
  * 本来想做用户可以匹配类似条形码的，

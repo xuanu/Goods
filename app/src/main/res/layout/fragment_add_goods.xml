@@ -32,331 +32,324 @@
             android:textSize="16sp" />
     </RelativeLayout>
 
-    <android.support.v7.widget.CardView
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="24dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="24dp"
-        app:cardBackgroundColor="@color/colorPrimary2"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="8dp">
+        android:padding="8dp"
+        app:cardBackgroundColor="@color/colorPrimary2">
 
-        <android.support.v4.widget.NestedScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <views.zeffect.cn.darklib.DarkImage
+                android:id="@+id/goods_img"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/goods_ex"
+                android:transitionName="@string/tran_img" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/good_title_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/goods_title_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="8"
+                    android:gravity="center"
+                    android:hint="商品名"
+                    android:lines="1"
+                    android:text=""
+                    android:textColor="@color/color_title"
+                    android:textSize="20sp"
+                    android:textStyle="normal"
+                    android:transitionName="@string/tran_title" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/goods_des_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/goods_des_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="15"
+                    android:gravity="center"
+                    android:hint="简要描述商品"
+                    android:maxLines="4"
+                    android:minLines="2"
+                    android:textColor="@color/color_des"
+                    android:textSize="16sp"
+                    android:textStyle="normal"
+                    android:transitionName="@string/tran_des" />
+            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="4dp">
+                android:id="@+id/last_count_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="当前库存:"
+                    android:textColor="@color/color_des"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/goods_count_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@null"
+                    android:ems="3"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:text="0"
+                    android:textColor="@color/color_price"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="件"
+                    android:textColor="@color/color_des"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/add_count_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="增加库存:"
+                    android:textColor="@color/color_des"
+                    android:textSize="14sp" />
 
                 <views.zeffect.cn.darklib.DarkImage
-                    android:id="@+id/goods_img"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginTop="8dp"
-                    android:src="@drawable/goods_ex"
-                    android:transitionName="@string/tran_img" />
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/good_title_layout"
+                    android:id="@+id/remove_count_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_horizontal">
+                    android:padding="8dp"
+                    android:src="@drawable/ic_remove_black_24dp" />
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/goods_title_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ems="8"
-                        android:gravity="center"
-                        android:hint="商品名"
-                        android:lines="1"
-                        android:text=""
-                        android:textColor="@color/color_title"
-                        android:textSize="20sp"
-                        android:textStyle="normal"
-                        android:transitionName="@string/tran_title" />
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/goods_des_layout"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/add_goods_count_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_horizontal">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/goods_des_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ems="15"
-                        android:gravity="center"
-                        android:hint="简要描述商品"
-                        android:maxLines="4"
-                        android:minLines="2"
-                        android:textColor="@color/color_des"
-                        android:textSize="16sp"
-                        android:textStyle="normal"
-                        android:transitionName="@string/tran_des" />
-                </android.support.design.widget.TextInputLayout>
-
-                <LinearLayout
-                    android:id="@+id/last_count_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="当前库存:"
-                        android:textColor="@color/color_des"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/goods_count_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:background="@null"
-                        android:ems="3"
-                        android:gravity="center"
-                        android:inputType="numberDecimal"
-                        android:lines="1"
-                        android:text="0"
-                        android:textColor="@color/color_price"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:text="件"
-                        android:textColor="@color/color_des"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/add_count_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="增加库存:"
-                        android:textColor="@color/color_des"
-                        android:textSize="14sp" />
-
-                    <views.zeffect.cn.darklib.DarkImage
-                        android:id="@+id/remove_count_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_remove_black_24dp" />
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/add_goods_count_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:background="@null"
-                        android:ems="3"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:text="0"
-                        android:textColor="@color/color_price"
-                        android:textSize="20sp" />
-
-                    <views.zeffect.cn.darklib.DarkImage
-                        android:id="@+id/add_count_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_add_gray_black_24dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/cost_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="进价:"
-                        android:textColor="@color/color_des"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:text="￥"
-                        android:textColor="@color/color_price"
-                        android:textSize="20sp" />
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/goods_cost_price_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:ems="3"
-                        android:gravity="center"
-                        android:hint="0"
-                        android:inputType="numberDecimal"
-                        android:lines="1"
-                        android:textColor="@color/color_price"
-                        android:textColorHint="@color/colorPrimary"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:text="元"
-                        android:textColor="@color/color_price"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/sale_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="卖价:"
-                        android:textColor="@color/color_des"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:text="￥"
-                        android:textColor="@color/color_price"
-                        android:textSize="20sp" />
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/goods_price_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:ems="3"
-                        android:gravity="center"
-                        android:hint="0"
-                        android:inputType="numberDecimal"
-                        android:lines="1"
-                        android:textColor="@color/color_price"
-                        android:textColorHint="@color/colorPrimary"
-                        android:textSize="20sp"
-                        android:transitionName="@string/tran_price" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:text="元"
-                        android:textColor="@color/color_price"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/bar_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="条形码:"
-                        android:textColor="@color/color_des"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/goods_bar_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:ems="7"
-                        android:gravity="center"
-                        android:text="" />
-
-
-                    <views.zeffect.cn.darklib.DarkImage
-                        android:id="@+id/add_bar_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_add_gray_black_24dp" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_margin="8dp"
+                    android:background="@null"
+                    android:ems="3"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:lines="1"
+                    android:text="0"
+                    android:textColor="@color/color_price"
+                    android:textSize="20sp" />
 
-                    <views.zeffect.cn.darklib.DarkButton
-                        android:id="@+id/sure_add_goods_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:background="@drawable/info_shape_bg"
-                        android:paddingLeft="80dp"
-                        android:paddingRight="80dp"
-                        android:text="确定添加"
-                        android:textColor="#fff"
-                        android:textSize="16sp"
-                        android:visibility="visible" />
+                <views.zeffect.cn.darklib.DarkImage
+                    android:id="@+id/add_count_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_add_gray_black_24dp" />
+            </LinearLayout>
 
-                    <views.zeffect.cn.darklib.DarkButton
-                        android:id="@+id/want_to_change_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:background="@drawable/info_shape_bg"
-                        android:text="继续修改"
-                        android:textColor="#fff"
-                        android:textSize="16sp"
-                        android:visibility="gone" />
+            <LinearLayout
+                android:id="@+id/cost_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
 
-                    <views.zeffect.cn.darklib.DarkButton
-                        android:id="@+id/true_to_add_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="8dp"
-                        android:background="@drawable/info_shape_bg"
-                        android:text="确认添加"
-                        android:textColor="#fff"
-                        android:textSize="16sp"
-                        android:visibility="gone" />
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="进价:"
+                    android:textColor="@color/color_des"
+                    android:textSize="18sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="￥"
+                    android:textColor="@color/color_price"
+                    android:textSize="20sp" />
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/goods_cost_price_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:ems="3"
+                    android:gravity="center"
+                    android:hint="0"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:textColor="@color/color_price"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="元"
+                    android:textColor="@color/color_price"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sale_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="卖价:"
+                    android:textColor="@color/color_des"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="￥"
+                    android:textColor="@color/color_price"
+                    android:textSize="20sp" />
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/goods_price_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:ems="3"
+                    android:gravity="center"
+                    android:hint="0"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:textColor="@color/color_price"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="20sp"
+                    android:transitionName="@string/tran_price" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="元"
+                    android:textColor="@color/color_price"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/bar_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="条形码:"
+                    android:textColor="@color/color_des"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/goods_bar_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:ems="7"
+                    android:gravity="center"
+                    android:text="" />
+
+
+                <views.zeffect.cn.darklib.DarkImage
+                    android:id="@+id/add_bar_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_add_gray_black_24dp" />
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <views.zeffect.cn.darklib.DarkButton
+                    android:id="@+id/sure_add_goods_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@drawable/info_shape_bg"
+                    android:paddingLeft="80dp"
+                    android:paddingRight="80dp"
+                    android:text="确定添加"
+                    android:textColor="#fff"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
+                <views.zeffect.cn.darklib.DarkButton
+                    android:id="@+id/want_to_change_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@drawable/info_shape_bg"
+                    android:text="继续修改"
+                    android:textColor="#fff"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+
+                <views.zeffect.cn.darklib.DarkButton
+                    android:id="@+id/true_to_add_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/info_shape_bg"
+                    android:text="确认添加"
+                    android:textColor="#fff"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+            </LinearLayout>
 
 
-    </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

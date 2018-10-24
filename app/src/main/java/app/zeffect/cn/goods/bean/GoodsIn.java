@@ -29,4 +29,41 @@ public class GoodsIn extends BaseGoods {
     private long producedTime;//生产日期
     @Column(COL_GOODS_EXPIRATION_DATE)
     private int expirationDate;//保质期
+
+
+    public long getGoodsId() {
+        return goodsId;
+    }
+
+    public GoodsIn setGoodsId(long goodsId) {
+        this.goodsId = goodsId;
+        return this;
+    }
+
+    public int getGoodsInCount() {
+        return goodsInCount;
+    }
+
+    public GoodsIn setGoodsInCount(int goodsInCount) {
+        this.goodsInCount = goodsInCount;
+        return this;
+    }
+
+    public long getProducedTime() {
+        return producedTime;
+    }
+
+    public GoodsIn setProducedTime(long producedTime) {
+        this.producedTime = producedTime;
+        return this;
+    }
+
+    public int getExpirationDate() {
+        return expirationDate;
+    }
+
+    public GoodsIn setExpirationDate(int expirationDate) {
+        this.expirationDate = expirationDate;
+        return this;
+    }
 }

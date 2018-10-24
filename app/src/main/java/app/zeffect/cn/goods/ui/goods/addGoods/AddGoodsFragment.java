@@ -35,6 +35,7 @@ import java.util.UUID;
 import app.zeffect.cn.goods.R;
 import app.zeffect.cn.goods.bean.GoodRepertory;
 import app.zeffect.cn.goods.bean.Goods;
+import app.zeffect.cn.goods.bean.GoodsIn;
 import app.zeffect.cn.goods.orm.GoodsOrm;
 import app.zeffect.cn.goods.ui.goods.choseimg.ChoseImageFragment;
 import app.zeffect.cn.goods.ui.main.GoodsRepository;
@@ -212,6 +213,10 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
                     costPriceEt.setText(goods.getGoodsCostPrice() + "");
                     priceEt.setText(goods.getGoodsPrice() + "");
                     addViewModel.findRepertory(goods.getId());
+                    String goodsImgPath = goods.getGoodsImg();
+                    if (!TextUtils.isEmpty(goodsImgPath)) {
+                        Glide.with(getContext()).load(new File(goodsImgPath)).into(goodsImg);
+                    }
                 }
             }
         });
@@ -281,8 +286,10 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
                 protected Void doInBackground(Context pTarget, Void... voids) throws Exception {
                     Goods addGoods = addViewModel.addGoodsInfo.getValue();
                     long goodId = addGoods.getId();
+                    //商品表
+                    GoodsOrm.getInstance().save(addGoods);
+                    //库存表
                     if (goodId < 1) {
-                        GoodsOrm.getInstance().save(addGoods);
                         String barCode = addGoods.getBarCode();
                         List<Goods> searchGoods = GoodsRepository.searchGoodsBarCode(barCode);
                         if (searchGoods != null && !searchGoods.isEmpty()) {
@@ -297,6 +304,20 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
                     repertory.setRepertoryCount(count + addCount);
                     repertory.setRepertoryTotal(total + addCount);
                     GoodsOrm.getInstance().save(repertory);
+                    //进货表
+                    GoodsIn goodsIn = new GoodsIn();
+                    goodsIn.setBarCode(addGoods.getBarCode());
+                    goodsIn.setCreatTime(System.currentTimeMillis());
+                    goodsIn.setGoodsCostPrice(addGoods.getGoodsCostPrice());
+                    goodsIn.setGoodsDescribe(addGoods.getGoodsDescribe());
+                    goodsIn.setGoodsImg(addGoods.getGoodsImg());
+                    goodsIn.setGoodsName(addGoods.getGoodsName());
+                    goodsIn.setGoodsPrice(addGoods.getGoodsPrice());
+                    goodsIn.setTitleSpell(addGoods.getTitleSpell());
+                    goodsIn.setGoodsId(goodId);
+                    goodsIn.setGoodsInCount(addCount);
+                    //生产日期，保质期，还没有填写
+                    GoodsOrm.getInstance().save(goodsIn);
                     return null;
                 }
 

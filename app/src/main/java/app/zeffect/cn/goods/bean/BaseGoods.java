@@ -4,7 +4,9 @@ import android.text.TextUtils;
 
 import com.litesuits.orm.db.annotation.Column;
 
-public class BaseGoods {
+import java.io.Serializable;
+
+public class BaseGoods implements Serializable {
 
     public static final String COL_GOODS_COST_PRICE = "costprice";
     public static final String COL_TITLE_SPELL = "titlespell";

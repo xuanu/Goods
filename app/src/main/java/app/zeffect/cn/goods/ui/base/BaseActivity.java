@@ -1,4 +1,4 @@
-package app.zeffect.cn.goods.ui;
+package app.zeffect.cn.goods.ui.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

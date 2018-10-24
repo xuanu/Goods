@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import app.zeffect.cn.goods.R;
-import app.zeffect.cn.goods.ui.BaseActivity;
+import app.zeffect.cn.goods.ui.base.BaseActivity;
 
 public class AddGoodsActivity extends BaseActivity {
 

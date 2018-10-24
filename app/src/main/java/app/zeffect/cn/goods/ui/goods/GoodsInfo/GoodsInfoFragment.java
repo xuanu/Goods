@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,6 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
 
     private View rootView;
 
-    private Goods goodsInfos;
     private GoodsInfoViewModel goodsInfoViewModel;
 
     private TextView mTitleTv, mDesTv, mCountTv, mPriceTv;
@@ -69,6 +69,7 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
         mPriceTv = rootView.findViewById(R.id.goods_price_tv);
         mGoodsImg = rootView.findViewById(R.id.goods_img);
         rootView.findViewById(R.id.goods_sale_btn).setOnClickListener(this);
+        rootView.findViewById(R.id.more_action_btn).setOnClickListener(this);
     }
 
     private void initData() {
@@ -88,21 +89,29 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
                 }
             }
         });
+        Goods goodsInfos = null;
         if (getActivity().getIntent().hasExtra(Constant.DATA)) {
             long id = getActivity().getIntent().getLongExtra(Constant.DATA, 0);
             goodsInfos = GoodsOrm.getInstance().queryById(id, Goods.class);
         }
-        if (goodsInfos != null) goodsInfoViewModel.goodsMutableLiveData.postValue(goodsInfos);
+        if (goodsInfos != null) {
+            goodsInfoViewModel.goodsMutableLiveData.postValue(goodsInfos);
+        }
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.more_action_btn) {
-            new GoodsActionFragment().appendAction(this, goodsInfos.getId()).show(getFragmentManager(), GoodsActionFragment.class.getName());
+            long goodsId = 0;
+            Goods goods = goodsInfoViewModel.goodsMutableLiveData.getValue();
+            if (goods != null) {
+                goodsId = goods.getId();
+            }
+            new GoodsActionFragment().appendAction(this, goodsId).show(getFragmentManager(), GoodsActionFragment.class.getName());
         } else if (v.getId() == R.id.left_back_btn) {
             getActivity().finish();
         } else if (v.getId() == R.id.goods_sale_btn) {
-            if (goodsInfos != null) {
+            if (goodsInfoViewModel.goodsMutableLiveData.getValue() != null) {
                 new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("售出")
                         .setContentText("售出一件商品?库存将减1")
@@ -135,11 +144,10 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
             Pair<View, String> titlePair = Pair.create((View) mTitleTv, getResources().getString(R.string.tran_title));
             Pair<View, String> desPair = Pair.create((View) mDesTv, getResources().getString(R.string.tran_des));
             Pair<View, String> pricePair = Pair.create((View) mPriceTv, getResources().getString(R.string.tran_price));
-            ActivityCompat.startActivity(getContext(), new Intent(getContext(), GoodsInfoActivity.class).putExtra(Constant.DATA, barCode), ActivityOptions.makeSceneTransitionAnimation(getActivity(), imgPair, titlePair, desPair, pricePair).toBundle());
+            ActivityCompat.startActivity(getContext(), new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.DATA, barCode), ActivityOptions.makeSceneTransitionAnimation(getActivity(), imgPair, titlePair, desPair, pricePair).toBundle());
         } else {
-            startActivity(new Intent(getContext(), GoodsInfoActivity.class).putExtra(Constant.DATA, barCode));
+            startActivity(new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.DATA, barCode));
         }
-        startActivity(new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.DATA, goodsInfos.getBarCode()));
     }
 
 
@@ -164,7 +172,7 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
         new DoAsync<Void, Void, Boolean>(getActivity()) {
             @Override
             protected Boolean doInBackground(Context pTarget, Void... voids) throws Exception {
-                return GoodsRepository.delGoods(goodsInfos);
+                return GoodsRepository.delGoods(goodsInfoViewModel.goodsMutableLiveData.getValue());
             }
 
             @Override
@@ -187,7 +195,12 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void editGoods(long goodId) {
-        gotoChangeGoods(goodsInfos.getBarCode());
+        String barCode = "";
+        Goods goods = goodsInfoViewModel.goodsMutableLiveData.getValue();
+        if (goods != null) {
+            barCode = goods.getBarCode();
+        }
+        gotoChangeGoods(barCode);
     }
 
     @Override
