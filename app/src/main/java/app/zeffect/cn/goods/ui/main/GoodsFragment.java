@@ -180,7 +180,8 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
     public void onClick(View v) {
         if (v.getId() == R.id.add_goods_btn) {
         } else if (v.getId() == R.id.scan_btn) {
-            scan();
+//            scan();
+            startActivity(new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.DATA, "2233423"));
         } else if (v.getId() == R.id.fab_scan) {
             scan();
         } else if (v.getId() == R.id.add_goods_btn) {

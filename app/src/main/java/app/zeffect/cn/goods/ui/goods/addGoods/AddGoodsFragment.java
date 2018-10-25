@@ -90,8 +90,8 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
     }
 
     private TextInputLayout titleLayout, desLayout;
-    private TextInputEditText titleEt, desEt, costPriceEt, priceEt;
-    private TextView goodsCountTv, addGoodsCountTv, goodsBarTv;
+    private TextInputEditText titleEt, desEt, costPriceEt, priceEt, addGoodsCountTv;
+    private TextView goodsCountTv, goodsBarTv;
     private ImageView goodsImg;
     private View costLayout, lastCountLayout, addCountLayout, saleLayout, barLayout;
     private View addCountBtn, removeCountBtn, addBarBtn, sureToAddBtn;
@@ -132,9 +132,29 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
         sureToAddBtn.setOnClickListener(this);
         rootView.findViewById(R.id.goods_img).setOnClickListener(this);
         trueToAddBtn.setOnClickListener(this);
-        expirationLayout.setOnClickListener(this);
+        expirationTv.setOnClickListener(this);
         wantToChangeBtn.setOnClickListener(this);
         //
+        addGoodsCountTv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String data = editable.toString().trim();
+                try {
+                    addViewModel.mAddRepertoryCount.postValue(Integer.parseInt(data));
+                } catch (NumberFormatException e) {
+                }
+            }
+        });
         titleEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -276,7 +296,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onClick(View view) {
         clearFouce();
-        if (view.getId() == R.id.goods_expiration_layout) {
+        if (view.getId() == R.id.goods_expiration_tv) {
             new ChoseCalendarFragment().setCalendarClick(new ChoseCalendarFragment.CalendarClick() {
                 @Override
                 public void clickCalendat(Calendar calendar) {
