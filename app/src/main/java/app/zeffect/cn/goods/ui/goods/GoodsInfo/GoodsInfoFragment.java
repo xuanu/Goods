@@ -201,15 +201,15 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
     }
 
 
-    private void gotoChangeGoods(String barCode) {
+    private void gotoChangeGoods(long goodsId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Pair<View, String> imgPair = Pair.create((View) mGoodsImg, getResources().getString(R.string.tran_img));
             Pair<View, String> titlePair = Pair.create((View) mTitleTv, getResources().getString(R.string.tran_title));
             Pair<View, String> desPair = Pair.create((View) mDesTv, getResources().getString(R.string.tran_des));
             Pair<View, String> pricePair = Pair.create((View) mPriceTv, getResources().getString(R.string.tran_price));
-            ActivityCompat.startActivity(getContext(), new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.DATA, barCode), ActivityOptions.makeSceneTransitionAnimation(getActivity(), imgPair, titlePair, desPair, pricePair).toBundle());
+            ActivityCompat.startActivity(getContext(), new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.ID, goodsId), ActivityOptions.makeSceneTransitionAnimation(getActivity(), imgPair, titlePair, desPair, pricePair).toBundle());
         } else {
-            startActivity(new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.DATA, barCode));
+            startActivity(new Intent(getContext(), AddGoodsActivity.class).putExtra(Constant.ID, goodsId));
         }
     }
 
@@ -259,12 +259,7 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void editGoods(long goodId) {
-        String barCode = "";
-        Goods goods = goodsInfoViewModel.goodsMutableLiveData.getValue();
-        if (goods != null) {
-            barCode = goods.getBarCode();
-        }
-        gotoChangeGoods(barCode);
+        gotoChangeGoods(goodId);
     }
 
     @Override

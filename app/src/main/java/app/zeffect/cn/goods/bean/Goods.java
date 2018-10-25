@@ -2,6 +2,7 @@ package app.zeffect.cn.goods.bean;
 
 import android.text.SpannableStringBuilder;
 
+import com.litesuits.orm.db.annotation.Column;
 import com.litesuits.orm.db.annotation.Ignore;
 import com.litesuits.orm.db.annotation.PrimaryKey;
 import com.litesuits.orm.db.annotation.Table;
@@ -21,10 +22,23 @@ public class Goods extends BaseGoods implements Serializable, Cloneable {
     public static final String COL_GOODS_IMG = "goodsimg";
     public static final String COL_GOODS_CREAT_TIME = "creattime";
     public static final String COL_BAR_CODE = "barcode";
+    public static final String COL_UUID = "uuid";
 
     @PrimaryKey(AssignType.AUTO_INCREMENT)
     private long id;
 
+    @Column(COL_UUID)
+    private String uuid;
+
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public Goods setUuid(String uuid) {
+        this.uuid = uuid;
+        return this;
+    }
 
     public long getId() {
         return id;

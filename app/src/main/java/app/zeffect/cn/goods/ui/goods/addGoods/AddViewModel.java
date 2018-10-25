@@ -7,6 +7,8 @@ import android.text.TextUtils;
 
 import com.litesuits.orm.db.assit.QueryBuilder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import app.zeffect.cn.goods.bean.GoodRepertory;
@@ -22,10 +24,11 @@ public class AddViewModel extends ViewModel {
     public MutableLiveData<GoodRepertory> mGoodRepertory = new MutableLiveData<>();
     public MutableLiveData<Integer> mAddRepertoryCount = new MutableLiveData<>();
     public MutableLiveData<Boolean> mSureAdd = new MutableLiveData<>();//确认添加
+    public MutableLiveData<Long> mExpirationDay = new MutableLiveData<>();
 
 
-    public void findGoods(String barCode) {
-        if (TextUtils.isEmpty(barCode)) return;
+    public void findGoods(final long goodsId, String barCode) {
+        if (barCode == null) barCode = "";
         new AsyncTask<String, Void, Goods>() {
 
             private String mBarCode = "";
@@ -33,9 +36,9 @@ public class AddViewModel extends ViewModel {
             @Override
             protected Goods doInBackground(String... strings) {
                 mBarCode = strings[0];
-                List<Goods> goods = GoodsRepository.likeGoodsBar(strings[0]);
-                if (goods != null && !goods.isEmpty()) {
-                    return goods.get(0);
+                if (goodsId >= 0) {
+                    Goods goods = GoodsOrm.getInstance().queryById(goodsId, Goods.class);
+                    return goods;
                 }
                 return null;
             }
@@ -45,7 +48,9 @@ public class AddViewModel extends ViewModel {
                 super.onPostExecute(goods);
                 if (goods == null) {
                     goods = new Goods();
-                    goods.setBarCode(mBarCode);
+                    ArrayList<String> barCodes = new ArrayList<>();
+                    barCodes.add(mBarCode);
+                    goods.setBarCode(barCodes);
                 }
                 addGoodsInfo.postValue(goods);
                 try {

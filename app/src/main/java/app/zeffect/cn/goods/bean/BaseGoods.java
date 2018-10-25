@@ -5,6 +5,9 @@ import android.text.TextUtils;
 import com.litesuits.orm.db.annotation.Column;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseGoods implements Serializable {
 
@@ -21,7 +24,7 @@ public class BaseGoods implements Serializable {
     @Column(Goods.COL_GOODS_IMG)
     private String goodsImg = "";
     @Column(Goods.COL_BAR_CODE)
-    private String barCode = "";
+    private ArrayList<String> barCode = new ArrayList<>();
     @Column(COL_GOODS_COST_PRICE)
     private double goodsCostPrice = 0;//进价
 
@@ -29,13 +32,13 @@ public class BaseGoods implements Serializable {
     private long creatTime = 0;
 
     @Column(COL_TITLE_SPELL)
-    private String titleSpell;
+    private ArrayList<String> titleSpell;
 
-    public String getTitleSpell() {
+    public ArrayList<String> getTitleSpell() {
         return titleSpell;
     }
 
-    public BaseGoods setTitleSpell(String titleSpell) {
+    public BaseGoods setTitleSpell(ArrayList<String> titleSpell) {
         this.titleSpell = titleSpell;
         return this;
     }
@@ -58,16 +61,25 @@ public class BaseGoods implements Serializable {
         return this;
     }
 
-    public String getBarCode() {
-        if (TextUtils.isEmpty(barCode)) barCode = "";
+    public ArrayList<String> getBarCode() {
+        if (barCode == null) barCode = new ArrayList<>();
         return barCode;
     }
 
-    public BaseGoods setBarCode(String barCode) {
+    public String getBarCodeStr() {
+        if (barCode == null) barCode = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < barCode.size(); i++) {
+            builder.append(barCode.get(i));
+            if (i < barCode.size() - 1) builder.append(",");
+        }
+        return builder.toString();
+    }
+
+    public BaseGoods setBarCode(ArrayList<String> barCode) {
         this.barCode = barCode;
         return this;
     }
-
 
     public String getGoodsImg() {
         if (TextUtils.isEmpty(goodsImg)) goodsImg = "";

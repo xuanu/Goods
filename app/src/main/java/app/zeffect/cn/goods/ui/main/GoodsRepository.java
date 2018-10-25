@@ -21,6 +21,12 @@ import app.zeffect.cn.goods.utils.GoodsUtils;
  */
 public class GoodsRepository {
 
+    public static List<Goods> findWithUuid(String uuid) {
+        if (TextUtils.isEmpty(uuid)) return Collections.emptyList();
+        List<Goods> findGoods = GoodsOrm.getInstance().query(new QueryBuilder<>(Goods.class).whereEquals(Goods.COL_UUID, uuid));
+        return findGoods;
+    }
+
     public static List<Goods> searchGoodsBarCode(String searchKey) {
         if (TextUtils.isEmpty(searchKey)) {
             return GoodsOrm.getInstance().query(Goods.class);
@@ -29,7 +35,7 @@ public class GoodsRepository {
         //搜索变色
         for (int i = 0; i < findGoods.size(); i++) {
             Goods tempGoods = findGoods.get(i);
-            String goodsBar = tempGoods.getBarCode();
+            String goodsBar = tempGoods.getBarCodeStr();
             tempGoods.setBarBuilder(GoodsUtils.makeSearchSpan(goodsBar, searchKey));
         }
         return findGoods;
@@ -43,7 +49,7 @@ public class GoodsRepository {
         //搜索变色
         for (int i = 0; i < findGoods.size(); i++) {
             Goods tempGoods = findGoods.get(i);
-            String goodsBar = tempGoods.getBarCode();
+            String goodsBar = tempGoods.getBarCodeStr();
             tempGoods.setBarBuilder(GoodsUtils.makeSearchSpan(goodsBar, searchKey));
         }
         return findGoods;
@@ -108,7 +114,7 @@ public class GoodsRepository {
         if (goodRepertorys != null && !goodRepertorys.isEmpty()) {
             GoodRepertory tmpRepertory = goodRepertorys.get(0);
             int tmpCount = tmpRepertory.getRepertoryCount();
-            tmpRepertory.setRepertoryCount(tmpCount + saleCount);
+            tmpRepertory.setRepertoryCount(tmpCount - saleCount);
             GoodsOrm.getInstance().save(tmpRepertory);
         }
         //卖出表

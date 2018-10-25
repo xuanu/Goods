@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class GoodsUtils {
         return in.readObject();
     }
 
-    public static List<StringBuilder> getFirstSpell(String word) throws Exception {
+    public static ArrayList<String> getFirstSpell(String word) throws Exception {
         List<StringBuilder> buffers = new LinkedList<>();
         buffers.add(new StringBuilder());
         char[] arr = word.toCharArray();
@@ -77,8 +78,11 @@ public class GoodsUtils {
                 addBuffer(buffers, arr[i]);
             }
         }
-        //
-        return buffers;
+        ArrayList<String> spells = new ArrayList<>(buffers.size());
+        for (int i = 0; i < buffers.size(); i++) {
+            spells.add(buffers.get(i).toString());
+        }
+        return spells;
     }
 
 

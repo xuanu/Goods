@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.haibin.calendarview.Calendar;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,18 +41,22 @@ import app.zeffect.cn.goods.bean.Goods;
 import app.zeffect.cn.goods.bean.GoodsIn;
 import app.zeffect.cn.goods.eventbean.UpdateGoods;
 import app.zeffect.cn.goods.orm.GoodsOrm;
+import app.zeffect.cn.goods.ui.calendar.ChoseCalendarFragment;
 import app.zeffect.cn.goods.ui.goods.choseimg.ChoseImageFragment;
 import app.zeffect.cn.goods.ui.main.GoodsRepository;
 import app.zeffect.cn.goods.utils.ChoseImage;
 import app.zeffect.cn.goods.utils.Constant;
 import app.zeffect.cn.goods.utils.DoAsync;
+import app.zeffect.cn.goods.utils.GoodsUtils;
 import app.zeffect.cn.goods.utils.Md5Utils;
 import app.zeffect.cn.goods.utils.PermissionUtils;
 import app.zeffect.cn.goods.utils.SnackbarUtil;
+import app.zeffect.cn.goods.utils.TimeUtils;
 
 public class AddGoodsFragment extends Fragment implements View.OnClickListener, ChoseImageFragment.ImgClick {
     private View rootView;
     private String barCode = "";
+    private long goodsId = -1;
 
     private AddViewModel addViewModel;
 
@@ -62,7 +67,9 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
         if (getActivity().getIntent().hasExtra(Constant.DATA)) {
             barCode = getActivity().getIntent().getStringExtra(Constant.DATA);
         }
-
+        if (getActivity().getIntent().hasExtra(Constant.ID)) {
+            goodsId = getActivity().getIntent().getLongExtra(Constant.ID, -1);
+        }
         addViewModel = ViewModelProviders.of(this).get(AddViewModel.class);
         addViewModel.mSureAdd.postValue(false);
     }
@@ -89,8 +96,13 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
     private View costLayout, lastCountLayout, addCountLayout, saleLayout, barLayout;
     private View addCountBtn, removeCountBtn, addBarBtn, sureToAddBtn;
     private View trueToAddBtn, wantToChangeBtn;
+    private View expirationLayout;
+    private TextView expirationTv;
+
 
     private void initView() {
+        expirationLayout = rootView.findViewById(R.id.goods_expiration_layout);
+        expirationTv = rootView.findViewById(R.id.goods_expiration_tv);
         trueToAddBtn = rootView.findViewById(R.id.true_to_add_btn);
         wantToChangeBtn = rootView.findViewById(R.id.want_to_change_btn);
         saleLayout = rootView.findViewById(R.id.sale_layout);
@@ -120,6 +132,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
         sureToAddBtn.setOnClickListener(this);
         rootView.findViewById(R.id.goods_img).setOnClickListener(this);
         trueToAddBtn.setOnClickListener(this);
+        expirationLayout.setOnClickListener(this);
         wantToChangeBtn.setOnClickListener(this);
         //
         titleEt.addTextChangedListener(new TextWatcher() {
@@ -206,13 +219,21 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void initData() {
+        addViewModel.mExpirationDay.observe(this, new Observer<Long>() {
+            @Override
+            public void onChanged(@Nullable Long aLong) {
+                if (aLong > 0) {
+                    expirationTv.setText(TimeUtils.format(aLong, "yyyy年MM月dd日"));
+                }
+            }
+        });
         addViewModel.addGoodsInfo.observe(this, new Observer<Goods>() {
             @Override
             public void onChanged(@Nullable Goods goods) {
                 if (goods != null) {
                     titleEt.setText(goods.getGoodsName());
                     desEt.setText(goods.getGoodsDescribe());
-                    goodsBarTv.setText(goods.getBarCode());
+                    goodsBarTv.setText(goods.getBarCodeStr());
                     costPriceEt.setText(goods.getGoodsCostPrice() + "");
                     priceEt.setText(goods.getGoodsPrice() + "");
                     addViewModel.findRepertory(goods.getId());
@@ -237,23 +258,32 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
                 if (integer != null) {
                     costLayout.setVisibility(integer > 0 ? View.VISIBLE : View.GONE);
                     addGoodsCountTv.setText("" + integer);
+                    expirationLayout.setVisibility(integer > 0 ? View.VISIBLE : View.GONE);
                 }
             }
         });
         addViewModel.mAddRepertoryCount.postValue(0);
-        addViewModel.findGoods(barCode);
+        addViewModel.findGoods(goodsId, barCode);
         addViewModel.mSureAdd.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
                 readToAdd(aBoolean);
             }
         });
+        addViewModel.mExpirationDay.postValue(System.currentTimeMillis());
     }
 
     @Override
     public void onClick(View view) {
         clearFouce();
-        if (view.getId() == R.id.add_count_btn) {
+        if (view.getId() == R.id.goods_expiration_layout) {
+            new ChoseCalendarFragment().setCalendarClick(new ChoseCalendarFragment.CalendarClick() {
+                @Override
+                public void clickCalendat(Calendar calendar) {
+                    addViewModel.mExpirationDay.postValue(calendar.getTimeInMillis());
+                }
+            }).show(getFragmentManager(), ChoseCalendarFragment.class.getName());
+        } else if (view.getId() == R.id.add_count_btn) {
             int count = addViewModel.mAddRepertoryCount.getValue();
             addViewModel.mAddRepertoryCount.postValue(count + 1);
         } else if (view.getId() == R.id.remove_count_btn) {
@@ -289,13 +319,18 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
                 protected Void doInBackground(Context pTarget, Void... voids) throws Exception {
                     Goods addGoods = addViewModel.addGoodsInfo.getValue();
                     //添加首拼
+                    addGoods.setTitleSpell(GoodsUtils.getFirstSpell(addGoods.getGoodsName()));
                     long goodId = addGoods.getId();
+                    String uuid = addGoods.getUuid();
+                    if (TextUtils.isEmpty(uuid)) {
+                        uuid = UUID.randomUUID().toString();
+                        addGoods.setUuid(uuid);
+                    }
                     //商品表
                     GoodsOrm.getInstance().save(addGoods);
                     //库存表
                     if (goodId < 1) {
-                        String barCode = addGoods.getBarCode();
-                        List<Goods> searchGoods = GoodsRepository.searchGoodsBarCode(barCode);
+                        List<Goods> searchGoods = GoodsRepository.findWithUuid(uuid);
                         if (searchGoods != null && !searchGoods.isEmpty()) {
                             goodId = searchGoods.get(0).getId();
                         }
@@ -393,7 +428,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
             desLayout.setVisibility(defaultGoods.getGoodsDescribe().equalsIgnoreCase(addGoods.getGoodsDescribe()) && ready ? View.INVISIBLE : View.VISIBLE);
             costLayout.setVisibility(defaultGoods.getGoodsCostPrice() == addGoods.getGoodsCostPrice() && ready ? View.INVISIBLE : View.VISIBLE);
             saleLayout.setVisibility(defaultGoods.getGoodsPrice() == addGoods.getGoodsPrice() && ready ? View.INVISIBLE : View.VISIBLE);
-            barLayout.setVisibility(defaultGoods.getBarCode().equalsIgnoreCase(addGoods.getBarCode()) && ready ? View.INVISIBLE : View.VISIBLE);
+            barLayout.setVisibility(defaultGoods.getBarCodeStr().equalsIgnoreCase(addGoods.getBarCodeStr()) && ready ? View.INVISIBLE : View.VISIBLE);
             addCountLayout.setVisibility(addViewModel.mAddRepertoryCount.getValue() > 0 && ready ? View.VISIBLE : View.INVISIBLE);
             lastCountLayout.setVisibility(ready ? View.INVISIBLE : View.VISIBLE);
             sureToAddBtn.setVisibility(ready ? View.GONE : View.VISIBLE);
@@ -460,7 +495,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
 
 
     private void takePhoto() {
-        String goodsName = UUID.randomUUID().toString() + "_" + Md5Utils.md5(barCode) + ".png";
+        String goodsName = UUID.randomUUID().toString() + "_" + Md5Utils.md5(barCode) + goodsId + ".png";
         takePhotoFile = new File(getContext().getExternalFilesDir("goodimg"), goodsName);
         ChoseImage.choseFromCameraCapture(getContext(), takePhotoFile, REQ_TAKE_PHOTO_CODE);
     }

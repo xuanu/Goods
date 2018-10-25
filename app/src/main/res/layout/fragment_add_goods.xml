@@ -69,6 +69,7 @@
                     android:id="@+id/goods_title_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:ems="8"
                     android:gravity="center"
                     android:hint="商品名"
@@ -102,30 +103,6 @@
                     android:transitionName="@string/tran_des" />
             </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="生产日期:"
-                    android:textColor="@color/color_des"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:background="@null"
-                    android:gravity="center"
-                    android:inputType="numberDecimal"
-                    android:lines="1"
-                    android:text="2018年10月22日"
-                    android:textColor="@color/color_price"
-                    android:textSize="16sp" />
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/last_count_layout"
@@ -207,10 +184,38 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/goods_expiration_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="保质期:"
+                    android:textColor="@color/color_des"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/goods_expiration_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:text="2018年10月22日"
+                    android:textColor="@color/color_price"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/cost_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:visibility="gone">
 
                 <TextView

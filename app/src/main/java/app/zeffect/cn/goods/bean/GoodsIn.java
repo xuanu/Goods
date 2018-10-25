@@ -25,10 +25,8 @@ public class GoodsIn extends BaseGoods {
     private long goodsId;//关联商品ID（记下关联，可以追溯）
     @Column(COL_GOODS_IN_COUNT)
     private int goodsInCount;
-    @Column(COL_GOODS_PRODUCE_TIME)
-    private long producedTime;//生产日期
     @Column(COL_GOODS_EXPIRATION_DATE)
-    private int expirationDate;//保质期
+    private long expirationDate;//保质期
 
 
     public long getGoodsId() {
@@ -49,20 +47,12 @@ public class GoodsIn extends BaseGoods {
         return this;
     }
 
-    public long getProducedTime() {
-        return producedTime;
-    }
 
-    public GoodsIn setProducedTime(long producedTime) {
-        this.producedTime = producedTime;
-        return this;
-    }
-
-    public int getExpirationDate() {
+    public long getExpirationDate() {
         return expirationDate;
     }
 
-    public GoodsIn setExpirationDate(int expirationDate) {
+    public GoodsIn setExpirationDate(long expirationDate) {
         this.expirationDate = expirationDate;
         return this;
     }
