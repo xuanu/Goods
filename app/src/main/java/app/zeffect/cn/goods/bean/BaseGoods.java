@@ -71,6 +71,16 @@ public class BaseGoods implements Serializable {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < barCode.size(); i++) {
             builder.append(barCode.get(i));
+            if (i < barCode.size() - 1) builder.append("\n");
+        }
+        return builder.toString();
+    }
+
+    public String getBarCodeStr2() {
+        if (barCode == null) barCode = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < barCode.size(); i++) {
+            builder.append(barCode.get(i));
             if (i < barCode.size() - 1) builder.append(",");
         }
         return builder.toString();

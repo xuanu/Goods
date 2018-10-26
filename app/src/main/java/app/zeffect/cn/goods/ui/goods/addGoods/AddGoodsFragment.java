@@ -6,6 +6,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -31,6 +33,7 @@ import com.haibin.calendarview.Calendar;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.UUID;
@@ -52,6 +55,9 @@ import app.zeffect.cn.goods.utils.Md5Utils;
 import app.zeffect.cn.goods.utils.PermissionUtils;
 import app.zeffect.cn.goods.utils.SnackbarUtil;
 import app.zeffect.cn.goods.utils.TimeUtils;
+import cn.bertsir.zbar.QrConfig;
+import cn.bertsir.zbar.QrManager;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class AddGoodsFragment extends Fragment implements View.OnClickListener, ChoseImageFragment.ImgClick {
     private View rootView;
@@ -79,8 +85,8 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_add_goods, container, false);
-            if (TextUtils.isEmpty(barCode)) {
-                SnackbarUtil.ShortSnackbar(rootView, "参数错误", SnackbarUtil.Warning);
+            if (TextUtils.isEmpty(barCode) && goodsId < 0) {
+                SnackbarUtil.ShortSnackbar(rootView, "参数错误", SnackbarUtil.Warning).show();
                 getActivity().finish();
             }
             initView();
@@ -290,13 +296,15 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
                 readToAdd(aBoolean);
             }
         });
-        addViewModel.mExpirationDay.postValue(System.currentTimeMillis());
+        addViewModel.mExpirationDay.postValue(System.currentTimeMillis() + 7L * 24 * 60 * 60 * 1000);
     }
 
     @Override
     public void onClick(View view) {
         clearFouce();
-        if (view.getId() == R.id.goods_expiration_tv) {
+        if (view.getId() == R.id.add_bar_btn) {
+            scan();
+        } else if (view.getId() == R.id.goods_expiration_tv) {
             new ChoseCalendarFragment().setCalendarClick(new ChoseCalendarFragment.CalendarClick() {
                 @Override
                 public void clickCalendat(Calendar calendar) {
@@ -347,6 +355,7 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
                         addGoods.setUuid(uuid);
                     }
                     //商品表
+                    addGoods.setBarCodeStr(addGoods.getBarCodeStr2());
                     GoodsOrm.getInstance().save(addGoods);
                     //库存表
                     if (goodId < 1) {
@@ -410,6 +419,45 @@ public class AddGoodsFragment extends Fragment implements View.OnClickListener, 
             }
         }
     }
+
+    private void scan() {
+        QrConfig qrConfig = new QrConfig.Builder()
+                .setDesText("(识别二维码)")//扫描框下文字
+                .setShowDes(false)//是否显示扫描框下面文字
+                .setShowLight(true)//显示手电筒按钮
+                .setShowTitle(true)//显示Title
+                .setShowAlbum(true)//显示从相册选择按钮
+                .setCornerColor(Color.WHITE)//设置扫描框颜色
+                .setLineColor(Color.WHITE)//设置扫描线颜色
+                .setLineSpeed(QrConfig.LINE_MEDIUM)//设置扫描线速度
+                .setScanType(QrConfig.TYPE_BARCODE)//设置扫码类型（二维码，条形码，全部，自定义，默认为二维码）
+                .setScanViewType(QrConfig.SCANVIEW_TYPE_BARCODE)//设置扫描框类型（二维码还是条形码，默认为二维码）
+                .setPlaySound(true)//是否扫描成功后bi~的声音
+                .setIsOnlyCenter(true)//是否只识别框中内容(默认为全屏识别)
+                .setTitleText("扫描条形码")//设置Tilte文字
+                .setTitleBackgroudColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))//设置状态栏颜色
+                .setTitleTextColor(Color.WHITE)//设置Title文字颜色
+                .create();
+        QrManager.getInstance().init(qrConfig).startScan(getActivity(), new QrManager.OnScanResultCallback() {
+            @Override
+            public void onScanSuccess(String result) {
+                ArrayList<String> barCodes = addViewModel.addGoodsInfo.getValue().getBarCode();
+                boolean hasBar = false;
+                for (int i = 0; i < barCodes.size(); i++) {
+                    String tmpBar = barCodes.get(i);
+                    if (tmpBar.equals(result)) {
+                        hasBar = true;
+                        break;
+                    }
+                }
+                if (!hasBar) {
+                    barCodes.add(result);
+                }
+                goodsBarTv.setText(addViewModel.addGoodsInfo.getValue().getBarCodeStr());
+            }
+        });
+    }
+
 
     /**
      * 检查添加

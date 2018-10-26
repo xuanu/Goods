@@ -3,6 +3,7 @@ package app.zeffect.cn.goods.ui.main;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 
+import com.litesuits.orm.db.annotation.Column;
 import com.litesuits.orm.db.assit.QueryBuilder;
 import com.litesuits.orm.db.assit.WhereBuilder;
 
@@ -27,29 +28,23 @@ public class GoodsRepository {
         return findGoods;
     }
 
-    public static List<Goods> searchGoodsBarCode(String searchKey) {
-        if (TextUtils.isEmpty(searchKey)) {
-            return GoodsOrm.getInstance().query(Goods.class);
-        }
-        List<Goods> findGoods = GoodsOrm.getInstance().query(new QueryBuilder<>(Goods.class).whereEquals(Goods.COL_BAR_CODE, searchKey));
+    public static List<Goods> findWithSpell(String spell) {
+        if (TextUtils.isEmpty(spell)) return Collections.emptyList();
+        List<Goods> findGoods = GoodsOrm.getInstance().query(new QueryBuilder<>(Goods.class).where(Goods.COL_SPELL_STR + " like ?", new Object[]{"%" + spell + "%"}));
         //搜索变色
-        for (int i = 0; i < findGoods.size(); i++) {
-            Goods tempGoods = findGoods.get(i);
-            String goodsBar = tempGoods.getBarCodeStr();
-            tempGoods.setBarBuilder(GoodsUtils.makeSearchSpan(goodsBar, searchKey));
-        }
         return findGoods;
     }
+
 
     public static List<Goods> likeGoodsBar(String searchKey) {
         if (TextUtils.isEmpty(searchKey)) {
             return Collections.emptyList();
         }
-        List<Goods> findGoods = GoodsOrm.getInstance().query(new QueryBuilder<>(Goods.class).where(Goods.COL_BAR_CODE + " like ?", new Object[]{"%" + searchKey + "%"}));
+        List<Goods> findGoods = GoodsOrm.getInstance().query(new QueryBuilder<>(Goods.class).where(Goods.COL_BAR_CODE_STR + " like ?", new Object[]{"%" + searchKey + "%"}));
         //搜索变色
         for (int i = 0; i < findGoods.size(); i++) {
             Goods tempGoods = findGoods.get(i);
-            String goodsBar = tempGoods.getBarCodeStr();
+            String goodsBar = tempGoods.getBarCodeStr2();
             tempGoods.setBarBuilder(GoodsUtils.makeSearchSpan(goodsBar, searchKey));
         }
         return findGoods;

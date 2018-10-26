@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,50 +9,54 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <RelativeLayout
+
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+        android:layout_height="wrap_content">
 
-        <views.zeffect.cn.darklib.DarkImage
-            android:id="@+id/left_back_btn"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:src="@drawable/ic_white_chevron_left_black_24dp" />
+            android:background="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|snap|enterAlways">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:lines="1"
-            android:maxEms="10"
-            android:text="添加商品"
-            android:textColor="@color/colorPrimary2"
-            android:textSize="16sp" />
-    </RelativeLayout>
+            <views.zeffect.cn.darklib.DarkImage
+                android:id="@+id/left_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:src="@drawable/ic_white_chevron_left_black_24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:lines="1"
+                android:maxEms="10"
+                android:text="添加商品"
+                android:textColor="@color/colorPrimary2"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
 
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="24dp"
         android:padding="8dp"
-        app:cardBackgroundColor="@color/colorPrimary2">
+        app:cardBackgroundColor="@color/colorPrimary2"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="4dp">
+            android:orientation="vertical">
 
             <views.zeffect.cn.darklib.DarkImage
                 android:id="@+id/goods_img"
                 android:layout_width="120dp"
+                android:scaleType="fitXY"
                 android:layout_height="120dp"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/goods_ex"
@@ -383,4 +387,4 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

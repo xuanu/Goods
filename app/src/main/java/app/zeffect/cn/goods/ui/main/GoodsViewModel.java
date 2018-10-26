@@ -5,11 +5,13 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import app.zeffect.cn.goods.bean.Goods;
+import app.zeffect.cn.goods.orm.GoodsOrm;
 import app.zeffect.cn.goods.utils.ListUtils;
 
 public final class GoodsViewModel extends ViewModel {
@@ -34,9 +36,26 @@ public final class GoodsViewModel extends ViewModel {
             protected List<Goods> doInBackground(String[] objects) {
                 String searchKey = objects[0];
                 List<Goods> searchGoods = new ArrayList<>();
-                searchGoods.addAll(GoodsRepository.searchGoodsBarCode(searchKey));
-                onProgressUpdate(searchGoods);
+                if (TextUtils.isEmpty(searchKey)) {
+                    searchGoods.addAll(GoodsOrm.getInstance().query(Goods.class));
+                    onProgressUpdate(searchGoods);
+                    return null;
+                }
                 if (!TextUtils.isEmpty(searchKey)) {
+                    //
+                    List<Goods> search10 = GoodsRepository.findWithSpell(searchKey);
+                    if (search10 != null && !search10.isEmpty()) {
+                        ListUtils.removeSame(searchGoods, search10);
+                        searchGoods.addAll(search10);
+                        onProgressUpdate(searchGoods);
+                    }
+                    //模糊搜索条形码
+                    List<Goods> search0 = GoodsRepository.likeGoodsBar(searchKey);
+                    if (search0 != null && !search0.isEmpty()) {
+                        ListUtils.removeSame(searchGoods, search0);
+                        searchGoods.addAll(search0);
+                        onProgressUpdate(searchGoods);
+                    }
                     //模糊搜索名字
                     List<Goods> searchGood4 = GoodsRepository.searchGoods1(searchKey);
                     if (searchGood4 != null && !searchGood4.isEmpty()) {

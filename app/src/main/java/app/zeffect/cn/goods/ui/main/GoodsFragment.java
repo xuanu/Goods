@@ -85,8 +85,7 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
             protected void onPostExecute(Context pTarget, Integer pResult) throws Exception {
                 super.onPostExecute(pTarget, pResult);
                 if (pResult != null) {
-                    goodsList.remove(pResult);
-                    goodsAdapter.notifyItemRemoved(pResult);
+                    goodsAdapter.remove(pResult);
                 }
             }
         }.execute(goodsId);
@@ -232,7 +231,7 @@ public class GoodsFragment extends Fragment implements View.OnClickListener, Bas
                     protected List<Goods> doInBackground(Context pTarget, String... strings) throws Exception {
                         String barCode = strings[0].trim();
                         this.barCode = barCode;
-                        return GoodsRepository.searchGoodsBarCode(barCode);
+                        return GoodsRepository.likeGoodsBar(barCode);
                     }
 
                     @Override

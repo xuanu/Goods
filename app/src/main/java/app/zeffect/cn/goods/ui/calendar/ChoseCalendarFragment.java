@@ -47,9 +47,9 @@ public class ChoseCalendarFragment extends AppCompatDialogFragment implements Ca
         //
         showTimeTv.setText(TimeUtils.format(choseTime, "yyyy年MM月"));
         java.util.Calendar now = java.util.Calendar.getInstance();
-        now.setTimeInMillis(System.currentTimeMillis() + 24 * 60 * 60 * 1000);
+        now.setTimeInMillis(System.currentTimeMillis() + 7L * 24 * 60 * 60 * 1000);
         int year = now.get(java.util.Calendar.YEAR);
-        int month = now.get(java.util.Calendar.MONTH) + 1; // 0-based!
+        int month = now.get(java.util.Calendar.MONTH) + 1;
         int day = now.get(java.util.Calendar.DAY_OF_MONTH);
         calendarView.setRange(year, month, day, 2099, 12, 31);
         calendarView.setOnCalendarSelectListener(this);

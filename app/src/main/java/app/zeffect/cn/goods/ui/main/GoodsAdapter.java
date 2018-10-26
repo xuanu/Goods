@@ -32,7 +32,11 @@ public class GoodsAdapter extends BaseQuickAdapter<Goods, BaseViewHolder> {
             helper.setText(R.id.item_des_tv, item.getGoodsDescribe());
         }
         helper.setText(R.id.item_price_tv, "￥" + item.getGoodsPrice());
-        helper.setText(R.id.item_bar_tv, "条形码：" + item.getBarCode());
+        if (item.getBarBuilder() != null) {
+            helper.setText(R.id.item_bar_tv, "条形码：" + item.getBarBuilder());
+        } else {
+            helper.setText(R.id.item_bar_tv, "条形码：" + item.getBarCodeStr2());
+        }
         String imgPath = item.getGoodsImg();
         if (!TextUtils.isEmpty(imgPath)) {
             Glide.with(helper.itemView.getContext()).load(new File(imgPath)).into((ImageView) helper.getView(R.id.item_goods_img));

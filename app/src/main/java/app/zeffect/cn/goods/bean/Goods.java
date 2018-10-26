@@ -22,7 +22,9 @@ public class Goods extends BaseGoods implements Serializable, Cloneable {
     public static final String COL_GOODS_IMG = "goodsimg";
     public static final String COL_GOODS_CREAT_TIME = "creattime";
     public static final String COL_BAR_CODE = "barcode";
+    public static final String COL_BAR_CODE_STR = "barcodestr";
     public static final String COL_UUID = "uuid";
+    public static final String COL_SPELL_STR = "spellstr";
 
     @PrimaryKey(AssignType.AUTO_INCREMENT)
     private long id;
@@ -30,6 +32,22 @@ public class Goods extends BaseGoods implements Serializable, Cloneable {
     @Column(COL_UUID)
     private String uuid;
 
+    @Column(COL_BAR_CODE_STR)
+    private String barCodeStr;
+
+    @Column(COL_SPELL_STR)
+    private String spellStr = "";
+
+
+    public Goods setSpellStr(String spellStr) {
+        this.spellStr = spellStr;
+        return this;
+    }
+
+    public Goods setBarCodeStr(String barCodeStr) {
+        this.barCodeStr = barCodeStr;
+        return this;
+    }
 
     public String getUuid() {
         return uuid;
